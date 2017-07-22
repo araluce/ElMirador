@@ -29,16 +29,16 @@ import javax.swing.table.DefaultTableModel;
  */
 public class InputCliente extends JTextField {
 
-    private Modelo m;
-    private TablaClientes tablaClientes;
+    private Model m;
+    private ClientsTable clientsTable;
     private boolean band = true;
     private String placeholder = "";
     private Color phColor = new Color(0, 0, 0);
 
-    public InputCliente(Modelo modelo, TablaClientes tabla) {
+    public InputCliente(Model modelo, ClientsTable tabla) {
         super();
         this.m = modelo;
-        this.tablaClientes = tabla;
+        this.clientsTable = tabla;
 
         setMargin(new Insets(3, 24, 3, 6));
         getDocument().addDocumentListener(new DocumentListener() {
@@ -72,28 +72,28 @@ public class InputCliente extends JTextField {
                 String busqueda = getText().toUpperCase();
                 System.out.println("Busqueda: '" + busqueda + "'");
                 if (busqueda.trim().equals("")) {
-                    ClienteManager cm = new ClienteManager();
-                    ArrayList<Cliente> arrayClientes = new ArrayList<Cliente>();
-                    arrayClientes = cm.findAllClientes(m.getConnection());
-                    DefaultTableModel model = (DefaultTableModel) tablaClientes.getModel();
-                    model.setRowCount(0);
-                    for (Cliente c : arrayClientes) {
-                        model.addRow(new Object[]{c.getNombre(), c.getApellido1() + " " + c.getApellido2(), c.getDni(), c.getTelefono()});
+                    ClientManager cm = new ClientManager();
+                    ArrayList<Client> arrayClientes = new ArrayList<Client>();
+                    arrayClientes = cm.findAllClients(m.getConnection(), true);
+                    DefaultTableModel dtmodel = (DefaultTableModel) clientsTable.getModel();
+                    dtmodel.setRowCount(0);
+                    for (Client c : arrayClientes) {
+                        dtmodel.addRow(new Object[]{c.getName(), c.getLastname1()+ " " + c.getLastname2(), c.getDni(), c.getPhone()});
                     }
                 } else {
-                    ClienteManager cm = new ClienteManager();
-                    ArrayList<Cliente> arrayClientes = new ArrayList<Cliente>();
+                    ClientManager cm = new ClientManager();
+                    ArrayList<Client> arrayClientes = new ArrayList<Client>();
                     Hashtable<String, String> parametros = new Hashtable<String, String>();
                     parametros.put("nombre", busqueda);
                     parametros.put("apellido1", busqueda);
                     parametros.put("apellido2", busqueda);
                     parametros.put("dni", busqueda);
                     parametros.put("telefono", busqueda);
-                    DefaultTableModel model = (DefaultTableModel) tablaClientes.getModel();
-                    model.setRowCount(0);
-                    arrayClientes = cm.findClientesBy(m.getConnection(), parametros);
-                    for (Cliente c : arrayClientes) {
-                        model.addRow(new Object[]{c.getNombre(), c.getApellido1() + " " + c.getApellido2(), c.getDni(), c.getTelefono()});
+                    DefaultTableModel dtmodel = (DefaultTableModel) clientsTable.getModel();
+                    dtmodel.setRowCount(0);
+                    arrayClientes = cm.findClientsBy(m.getConnection(), parametros);
+                    for (Client c : arrayClientes) {
+                        dtmodel.addRow(new Object[]{c.getName(), c.getLastname1()+ " " + c.getLastname2(), c.getDni(), c.getPhone()});
                     }
                 }
             }

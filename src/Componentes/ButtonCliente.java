@@ -31,7 +31,7 @@ public class ButtonCliente
 
     private String dni;
 
-    private TablaClientes table;
+    private ClientsTable table;
     private int mnemonic;
     private Border originalBorder;
     private Border focusBorder;
@@ -44,7 +44,7 @@ public class ButtonCliente
     private Cursor defaultCursor;
     private Cursor handCursor;
 
-    public ButtonCliente(TablaClientes table, String dni) {
+    public ButtonCliente(ClientsTable table, String dni) {
         this.dni = dni;
         this.table = table;
 

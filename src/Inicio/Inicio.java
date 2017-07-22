@@ -5,8 +5,10 @@
  */
 package Inicio;
 
+import Ini.Seed;
 import Modelo.*;
 import Vista.*;
+import Ini.*;
 import java.util.ArrayList;
 
 /**
@@ -16,11 +18,13 @@ import java.util.ArrayList;
 public class Inicio {
 
     public static void main(String[] args) {
-        Modelo modelo = new Modelo();
+        Model model = new Model();
+        Seed seed = new Seed(model); 
         
-//        modelo.dropTable();
-        modelo.createTablesIfNotExists();
-        Principal principal = new Principal(modelo);
+//        modelo.dropTable("CLIENTE");
+        
+        
+        Principal principal = new Principal(model);
         principal.setVisible(true);
     }
 }

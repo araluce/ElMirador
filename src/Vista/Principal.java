@@ -20,17 +20,17 @@ import javax.swing.table.DefaultTableModel;
  */
 public class Principal extends javax.swing.JFrame {
 
-    private Modelo modelo = null;
-    private TablaClientes tablaClientes = null;
+    private Model model = null;
+    private ClientsTable clientsTable = null;
     private JLabel inputSearchClientes = null;
 
     /**
      * Creates new form Principal
      */
-    public Principal(Modelo modelo) {
-        this.modelo = modelo;
-        tablaClientes = new TablaClientes(modelo);
-        InputCliente inputClientes = new InputCliente(modelo, tablaClientes);
+    public Principal(Model modelo) {
+        this.model = modelo;
+        clientsTable = new ClientsTable(modelo);
+        InputCliente inputClientes = new InputCliente(modelo, clientsTable);
 
         initComponents();
         
@@ -41,16 +41,16 @@ public class Principal extends javax.swing.JFrame {
         this.inputSearchClientes.add(inputClientes);
 
         this.setExtendedState(javax.swing.JFrame.MAXIMIZED_BOTH);
-        this.setTitle("JAMONES EL MIRADOR - GESTIÓN DE ARANCELES");
+        this.setTitle("JAMONES EL MIRADOR - GESTIÓN DE ALBARANES");
 
-        ClienteManager cm = new ClienteManager();
-        ArrayList<Cliente> arrayClientes = new ArrayList<Cliente>();
-        arrayClientes = cm.findAllClientes(modelo.getConnection());
-        DefaultTableModel model = (DefaultTableModel) this.tablaClientes.getModel();
-        for (Cliente c : arrayClientes) {
-            model.addRow(new Object[]{c.getNombre(), c.getApellido1() + " " + c.getApellido2(), c.getDni(), c.getTelefono()});
+        ClientManager cm = new ClientManager();
+        ArrayList<Client> clientsArray = new ArrayList<Client>();
+        clientsArray = cm.findAllClients(model.getConnection(), false);
+        DefaultTableModel dtmodel = (DefaultTableModel) this.clientsTable.getModel();
+        for (Client c : clientsArray) {
+            dtmodel.addRow(new Object[]{c.getName(), c.getLastname1()+ " " + c.getLastname2(), c.getDni(), c.getPhone()});
         }
-        panelResultadoBusquedaClientes.getViewport().add(this.tablaClientes);
+        panelResultadoBusquedaClientes.getViewport().add(this.clientsTable);
 
         getContentPane().setBackground(Color.WHITE);
         panelBotones.setBackground(Color.WHITE);
@@ -160,7 +160,7 @@ public class Principal extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void buttonAltaClientesMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_buttonAltaClientesMouseClicked
-        AltaCliente ac = new AltaCliente(modelo, tablaClientes);
+        ClientRegister ac = new ClientRegister(model, clientsTable);
         ac.setLocationRelativeTo(this);
         ac.setVisible(true);
     }//GEN-LAST:event_buttonAltaClientesMouseClicked

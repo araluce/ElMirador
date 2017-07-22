@@ -5,98 +5,114 @@
  */
 package Vista;
 
-import Componentes.TablaAlbaranesCliente;
-import Componentes.TablaClientes;
+import Componentes.ClienteBillsTable;
+import Componentes.ClientsTable;
 import Modelo.*;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
-import java.util.ArrayList;
-import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JSeparator;
-import javax.swing.JTable;
-import javax.swing.JTextField;
-import javax.swing.border.Border;
 import javax.swing.table.DefaultTableModel;
+import src.Response;
 
 /**
  *
  * @author araluce
  */
-public class DirectorioCliente extends javax.swing.JFrame {
+public class ClientDirectory extends javax.swing.JFrame {
 
-    private Modelo modelo;
+    private Model model;
     private String dni;
-    
-    private JButton botonRegistrar = new JButton();
-    
-    private JFrame esteFormulario = this;
+
+    private JButton modifyButton = new JButton();
+    private JButton deleteButton = new JButton();
+
+    private JFrame thisForm = this;
 
     /**
      * Creates new form DirectorioCliente
      */
-    public DirectorioCliente(Modelo m, String ndni, TablaClientes tabla) {
-        this.modelo = m;
+    public ClientDirectory(Model m, String ndni, ClientsTable table) {
+        this.model = m;
         this.dni = ndni;
-        
+
         initComponents();
-        
+
         getContentPane().setBackground(Color.WHITE);
-        
-        ClienteManager cm = new ClienteManager();
-        Cliente cliente = cm.findOneClienteByDni(modelo.getConnection(), dni);
-        
+
+        final ClientManager cm = new ClientManager();
+        final Client client = cm.findOneClientByDni(model.getConnection(), dni);
+
         setTitle("Directorio de " + this.dni);
         setDefaultCloseOperation(cerrarVentana());
         setSize(800, 330);
         setLayout(null);
-        
-        TablaAlbaranesCliente tablaAlbaranesCliente = new TablaAlbaranesCliente(this.modelo, this.dni);
-        tablaAlbaranesCliente.setBounds(30, 50, 770, 200);
-        
-        DefaultTableModel model = (DefaultTableModel) tablaAlbaranesCliente.getModel();
+
+        ClienteBillsTable clientBillTable = new ClienteBillsTable(this.model, this.dni);
+        clientBillTable.setBounds(30, 50, 770, 200);
+
+        DefaultTableModel model = (DefaultTableModel) clientBillTable.getModel();
         //"Nº ALBARÁN", "Nº RSI", "Nº LOTE", "PROCEDENCIA", "PESO TOTAL (Kg)", "F. ENTRADA", "PRECIO TOTAL"
         model.addRow(new Object[]{1234, 4321, 666, "CÁCERES", 16.50, new java.util.Date(2017, 04, 3), 125.50});
 
         JLabel datosCliente = new JLabel(
-                "<html>" + 
-                "   " + cliente.getNombre() + " " + cliente.getApellido1() + " " + cliente.getApellido2() + 
-                "   &nbsp;&nbsp;DNI: " + cliente.getDni() + 
-                "   &nbsp;&nbsp;<span style='color: red;'>Tlf: </span>" + cliente.getTelefono() + 
-                "</html>"
+                "<html>"
+                + "   " + client.getName() + " " + client.getLastname1() + " " + client.getLastname2()
+                + "   &nbsp;&nbsp;DNI: " + client.getDni()
+                + "   &nbsp;&nbsp;<span style='color: red;'>Tlf: </span>" + client.getPhone()
+                + "</html>"
         );
         datosCliente.setBounds(30, 7, 770, 30);
-        
+
         JSeparator separador = new JSeparator();
         separador.setBounds(30, 37, 700, 5);
 
-        
-
         // Definiendo los botones
-
-        botonRegistrar = new JButton("Modificar");
-        botonRegistrar.setToolTipText("Modificar datos de un usuario");
-        botonRegistrar.setBackground(new Color(40, 96, 144));
-        botonRegistrar.setForeground(Color.WHITE);
-        botonRegistrar.setFocusPainted(false);
-        botonRegistrar.setBounds(170, 230, 140, 30);
-        botonRegistrar.addActionListener(new ActionListener() {
+        modifyButton = new JButton("Modificar");
+        modifyButton.setToolTipText("Modificar datos de un usuario");
+        modifyButton.setBackground(new Color(40, 96, 144));
+        modifyButton.setForeground(Color.WHITE);
+        modifyButton.setFocusPainted(false);
+        modifyButton.setBounds(170, 230, 140, 30);
+        modifyButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                
+
             }
         });
 
+        deleteButton = new JButton("Eliminar");
+        deleteButton.setToolTipText("Eliminar cliente");
+        deleteButton.setBackground(new Color(201, 48, 44));
+        deleteButton.setForeground(Color.WHITE);
+        deleteButton.setFocusPainted(false);
+        deleteButton.setBounds(370, 230, 140, 30);
+        final Model optionModel = this.model;
+        deleteButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (JOptionPane.showConfirmDialog(null, "¿Está seguro de que desea eliminar este cliente?", "WARNING",
+                        JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+                    Response response = cm.removeClient(client, optionModel.getConnection());
+                    JOptionPane.showMessageDialog(thisForm, response.getResponse());
+                }
+            }
+        }
+        );
+
         add(datosCliente);
+
         add(separador);
 
-        add(tablaAlbaranesCliente);
+        add(modifyButton);
+
+        add(deleteButton);
+
+        add(clientBillTable);
     }
 
     public int cerrarVentana() {

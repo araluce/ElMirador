@@ -6,7 +6,8 @@
 package Componentes;
 
 import Modelo.*;
-import Vista.DirectorioCliente;
+import Vista.ClientRegister;
+import Vista.ClientDirectory;
 import java.awt.Color;
 import java.awt.Font;
 import javax.swing.JOptionPane;
@@ -19,26 +20,26 @@ import javax.swing.table.JTableHeader;
  *
  * @author araluce
  */
-public class TablaAlbaranesCliente extends JTable{
-    private Modelo modelo;
-    private TablaAlbaranesCliente estaTabla = this;
-    private String dni = null;
+public class ClientsTable extends JTable {
 
-    public TablaAlbaranesCliente(Modelo modelo, String ndni) {
+    private Model modelo;
+    private ClientsTable estaTabla = null;
+
+    public ClientsTable(Model modelo) {
         setBackground(Color.WHITE);
-        this.dni = ndni;
+        estaTabla = this;
         this.modelo = modelo;
         this.setModel(new javax.swing.table.DefaultTableModel(
                 new Object[][]{},
                 new String[]{
-                    "Nº ALBARÁN", "Nº RSI", "Nº LOTE", "PROCEDENCIA", "PESO TOTAL (Kg)", "F. ENTRADA", "PRECIO TOTAL"
+                    "Nombre", "Apellidos", "DNI", "Teléfono"
                 }
         ) {
             Class[] types = new Class[]{
-                java.lang.Integer.class, java.lang.Integer.class, java.lang.Integer.class, java.lang.String.class, java.lang.Double.class, java.util.Date.class, java.lang.Double.class
+                java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
             };
             boolean[] canEdit = new boolean[]{
-                false, false, false, false, false, false, false
+                false, false, false, false, false
             };
 
             public Class getColumnClass(int columnIndex) {
@@ -49,7 +50,7 @@ public class TablaAlbaranesCliente extends JTable{
                 return canEdit[columnIndex];
             }
         });
-        this.setToolTipText("Tabla de de albaranes del cliente " + this.dni);
+        this.setToolTipText("Tabla de clientes");
         this.setColumnSelectionAllowed(true);
         this.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
 
@@ -59,18 +60,17 @@ public class TablaAlbaranesCliente extends JTable{
             this.getColumnModel().getColumn(1).setResizable(false);
             this.getColumnModel().getColumn(2).setResizable(false);
             this.getColumnModel().getColumn(3).setResizable(false);
-            this.getColumnModel().getColumn(4).setResizable(false);
-            this.getColumnModel().getColumn(5).setResizable(false);
-            this.getColumnModel().getColumn(6).setResizable(false);
         }
+        final JTable table = this;
+        final Model m = this.modelo;
         this.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
             @Override
             public void valueChanged(ListSelectionEvent event) {
                 if (event.getValueIsAdjusting()) {
-                    //String dni = table.getValueAt(table.getSelectedRow(), 2).toString();
-                    //DirectorioCliente dc = new DirectorioCliente(m, dni, estaTabla);
-                    //dc.setLocationRelativeTo(table);
-                    //dc.setVisible(true);
+                    String dni = table.getValueAt(table.getSelectedRow(), 2).toString();
+                    ClientDirectory dc = new ClientDirectory(m, dni, estaTabla);
+                    dc.setLocationRelativeTo(table);
+                    dc.setVisible(true);
                 }
             }
         });
@@ -80,4 +80,5 @@ public class TablaAlbaranesCliente extends JTable{
         header.setForeground(Color.WHITE);
         header.setFont(new Font("SansSerif", Font.BOLD, 12));
     }
+
 }

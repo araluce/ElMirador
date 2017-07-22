@@ -26,26 +26,26 @@ import javax.swing.table.DefaultTableModel;
  *
  * @author araluce
  */
-public class AltaCliente extends javax.swing.JFrame {
+public class ClientRegister extends javax.swing.JFrame {
 
-    private Modelo model = null;
-    private JTextField inputNombre = new JTextField();
-    private JTextField inputApellido1 = new JTextField();
-    private JTextField inputApellido2 = new JTextField();
+    private Model model = null;
+    private JTextField inputName = new JTextField();
+    private JTextField inputLastname1 = new JTextField();
+    private JTextField inputLastname2 = new JTextField();
     private JTextField inputDni = new JTextField();
-    private JTextField inputTelefono = new JTextField();
-    private JButton botonSalir = new JButton();
-    private JButton botonRegistrar = new JButton();
+    private JTextField inputPhone = new JTextField();
+    private JButton exitButton = new JButton();
+    private JButton registerButton = new JButton();
 
-    private JFrame esteFormulario = this;
-    private JTable tablaBusquedaClientes = new JTable();
+    private JFrame thisForm = this;
+    private JTable clientSearchTable = new JTable();
 
     /**
      * Creates new form AltaCliente
      */
-    public AltaCliente(Modelo modelo, JTable tbc) {
-        this.model = modelo;
-        this.tablaBusquedaClientes = tbc;
+    public ClientRegister(Model external_model, JTable tbc) {
+        this.model = external_model;
+        this.clientSearchTable = tbc;
 
         initComponents();
 
@@ -74,114 +74,114 @@ public class AltaCliente extends javax.swing.JFrame {
         JLabel telefono = new JLabel("Teléfono");
         telefono.setBounds(30, 190, 90, 30);
 
-        inputNombre = new JTextField();
-        inputNombre.setBounds(110, 50, 200, 30);
+        inputName = new JTextField();
+        inputName.setBounds(110, 50, 200, 30);
 
-        inputApellido1 = new JTextField();
-        inputApellido1.setBounds(110, 85, 200, 30);
+        inputLastname1 = new JTextField();
+        inputLastname1.setBounds(110, 85, 200, 30);
 
-        inputApellido2 = new JTextField();
-        inputApellido2.setBounds(110, 120, 200, 30);
+        inputLastname2 = new JTextField();
+        inputLastname2.setBounds(110, 120, 200, 30);
 
         inputDni = new JTextField();
         inputDni.setBounds(110, 155, 200, 30);
         inputDni.addKeyListener(new KeyAdapter() {
-            Border bordeRojo = BorderFactory.createLineBorder(Color.RED);
-            Border bordeNegro = BorderFactory.createLineBorder(Color.BLACK);
+            Border redBorder = BorderFactory.createLineBorder(Color.RED);
+            Border blackBorder = BorderFactory.createLineBorder(Color.BLACK);
 
             public void keyTyped(KeyEvent e) {
                 String dni = inputDni.getText().toUpperCase();
                 int dniLenght = dni.length();
                 if (dniLenght < 8) {
-                    inputDni.setBorder(bordeRojo);
+                    inputDni.setBorder(redBorder);
                     inputDni.setText(dni);
                     inputDni.repaint();
                 } else {
-                    inputDni.setBorder(bordeNegro);
+                    inputDni.setBorder(blackBorder);
                     inputDni.setText(dni);
                     inputDni.repaint();
                 }
             }
         });
 
-        inputTelefono = new JTextField();
-        inputTelefono.setBounds(110, 190, 200, 30);
-        inputTelefono.addKeyListener(new KeyAdapter() {
+        inputPhone = new JTextField();
+        inputPhone.setBounds(110, 190, 200, 30);
+        inputPhone.addKeyListener(new KeyAdapter() {
             Border bordeRojo = BorderFactory.createLineBorder(Color.RED);
             Border bordeNegro = BorderFactory.createLineBorder(Color.BLACK);
 
             public void keyTyped(KeyEvent e) {
-                String telefono = inputTelefono.getText();
+                String telefono = inputPhone.getText();
                 int telefonoLenght = telefono.length();
                 if (telefonoLenght < 8) {
-                    inputTelefono.setBorder(bordeRojo);
-                    inputTelefono.setText(telefono);
-                    inputTelefono.repaint();
+                    inputPhone.setBorder(bordeRojo);
+                    inputPhone.setText(telefono);
+                    inputPhone.repaint();
                 } else {
-                    inputTelefono.setBorder(bordeNegro);
-                    inputTelefono.setText(telefono);
-                    inputTelefono.repaint();
+                    inputPhone.setBorder(bordeNegro);
+                    inputPhone.setText(telefono);
+                    inputPhone.repaint();
                 }
             }
         });
 
         // Definiendo los botones
-        botonSalir = new JButton("Cancelar");
-        botonSalir.setToolTipText("Cancelar la operación");
-        botonSalir.setBackground(Color.WHITE);
-        botonSalir.setFocusPainted(false);
-        botonSalir.setBounds(25, 230, 140, 30);
-        botonSalir.addActionListener(new ActionListener() {
+        exitButton = new JButton("Terminar");
+        exitButton.setToolTipText("Cancelar la operación");
+        exitButton.setBackground(Color.WHITE);
+        exitButton.setFocusPainted(false);
+        exitButton.setBounds(25, 230, 140, 30);
+        exitButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                esteFormulario.dispose();
+                thisForm.dispose();
             }
         });
 
-        botonRegistrar = new JButton("Registrar");
-        botonRegistrar.setToolTipText("Dar de alta al usuario");
-        botonRegistrar.setBackground(new Color(40, 96, 144));
-        botonRegistrar.setForeground(Color.WHITE);
-        botonRegistrar.setFocusPainted(false);
-        botonRegistrar.setBounds(170, 230, 140, 30);
-        botonRegistrar.addActionListener(new ActionListener() {
+        registerButton = new JButton("Registrar");
+        registerButton.setToolTipText("Dar de alta al usuario");
+        registerButton.setBackground(new Color(40, 96, 144));
+        registerButton.setForeground(Color.WHITE);
+        registerButton.setFocusPainted(false);
+        registerButton.setBounds(170, 230, 140, 30);
+        registerButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                ClienteManager cm = new ClienteManager();
-                ArrayList<Cliente> listaClientes = new ArrayList<Cliente>();
-                listaClientes = cm.findClientesByDni(model.getConnection(), inputDni.getText());
-                if (listaClientes.isEmpty()) {
+                ClientManager cm = new ClientManager();
+                ArrayList<Client> clientList = new ArrayList<Client>();
+                clientList = cm.findClientsByDni(model.getConnection(), inputDni.getText());
+                if (clientList.isEmpty()) {
                     // Creamos al nuevo cliente
-                    Cliente cliente = new Cliente();
-                    cliente.setNombre(inputNombre.getText().toUpperCase());
-                    cliente.setApellido1(inputApellido1.getText().toUpperCase());
-                    cliente.setApellido2(inputApellido2.getText().toUpperCase());
+                    Client cliente = new Client();
+                    cliente.setName(inputName.getText().toUpperCase());
+                    cliente.setLastname1(inputLastname1.getText().toUpperCase());
+                    cliente.setLastname2(inputLastname2.getText().toUpperCase());
                     cliente.setDni(inputDni.getText().toUpperCase());
-                    cliente.setTelefono(inputTelefono.getText());
+                    cliente.setPhone(inputPhone.getText());
 
                     // Vaciamos los campos
-                    inputNombre.setText("");
-                    inputApellido1.setText("");
-                    inputApellido2.setText("");
+                    inputName.setText("");
+                    inputLastname1.setText("");
+                    inputLastname2.setText("");
                     inputDni.setText("");
-                    inputTelefono.setText("");
+                    inputPhone.setText("");
 
-                    int resultado = cm.clienteFlush(model.getConnection(), cliente);
+                    int resultado = cm.clientFlush(model.getConnection(), cliente);
                     System.out.println(resultado);
                     if (resultado == 0) {
-                        JOptionPane.showMessageDialog(esteFormulario, "Se ha prodicido un error y no se ha dado de alta al cliente", "ERROR", JOptionPane.ERROR_MESSAGE);
+                        JOptionPane.showMessageDialog(thisForm, "Se ha prodicido un error y no se ha dado de alta al cliente", "ERROR", JOptionPane.ERROR_MESSAGE);
                     } else {
-                        JOptionPane.showMessageDialog(esteFormulario, "Cliente dado de alta correctamente");
-                        ArrayList<Cliente> arrayClientes = new ArrayList<Cliente>();
-                        arrayClientes = cm.findAllClientes(model.getConnection());
-                        DefaultTableModel model = (DefaultTableModel) tablaBusquedaClientes.getModel();
+                        JOptionPane.showMessageDialog(thisForm, "Cliente dado de alta correctamente");
+                        ArrayList<Client> arrayClientes = new ArrayList<Client>();
+                        arrayClientes = cm.findAllClients(model.getConnection(), true);
+                        DefaultTableModel model = (DefaultTableModel) clientSearchTable.getModel();
                         model.setRowCount(0);
-                        for (Cliente c : arrayClientes) {
-                            model.addRow(new Object[]{c.getNombre(), c.getApellido1() + " " + c.getApellido2(), c.getDni(), c.getTelefono()});
+                        for (Client c : arrayClientes) {
+                            model.addRow(new Object[]{c.getName(), c.getLastname1()+ " " + c.getLastname2(), c.getDni(), c.getPhone()});
                         }
                     }
                 } else {
-                    JOptionPane.showMessageDialog(esteFormulario, "Ya existe un usuario con este DNI", "ERROR", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(thisForm, "Ya existe un usuario con este DNI", "ERROR", JOptionPane.ERROR_MESSAGE);
                 }
             }
         });
@@ -193,14 +193,14 @@ public class AltaCliente extends javax.swing.JFrame {
         add(dni);
         add(telefono);
 
-        add(inputApellido1);
-        add(inputApellido2);
+        add(inputLastname1);
+        add(inputLastname2);
         add(inputDni);
-        add(inputNombre);
-        add(inputTelefono);
+        add(inputName);
+        add(inputPhone);
 
-        add(botonSalir);
-        add(botonRegistrar);
+        add(exitButton);
+        add(registerButton);
     }
 
     /**
