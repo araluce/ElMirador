@@ -102,7 +102,7 @@ public class Cliente {
     }
     
     @Override
-    public void toString(){
+    public String toString(){
         return "Nombre y apellidos: " + this.nombre + " " + this.apellido1 + " " + this.apellido2 + "\n"
                 + "Dni: " + this.dni + "\n"
                 + "Teléfono: " + this.telefono;
