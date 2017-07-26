@@ -28,6 +28,38 @@ public class ClientManager {
     public ClientManager() {
     }
 
+    /* Encuentra un cliente por dni
+     *
+     * @param dni 8 caracteres y 1 letra que identifican a un cliente
+     * @return Client|null
+     */
+    public Client find(Connection conn, int id) {
+        ResultSet result = null;
+        try {
+            Statement st = conn.createStatement();
+            result = st.executeQuery("SELECT * FROM Client WHERE id LIKE '" + id + "';");
+            if (result.next()) {
+                Client client = new Client();
+                client.setId(result.getInt("id"));
+                client.setName(result.getString("name"));
+                client.setLastname1(result.getString("lastname1"));
+                client.setLastname2(result.getString("lastname2"));
+                client.setDni(result.getString("dni"));
+                client.setPhone(result.getString("phone"));
+//                Calendar date = Calendar.getInstance();
+//                date.setTime(result.getDate("created_at"));
+//                client.setCreatedAt(date);
+//                date.setTime(result.getDate("updated_at"));
+//                client.setUpdatedAt(date);
+                return client;
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(Model.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        return null;
+    }
+
     /**
      * Encuentra un cliente por dni
      *
@@ -41,6 +73,7 @@ public class ClientManager {
             result = st.executeQuery("SELECT * FROM Client WHERE dni LIKE '" + dni + "';");
             if (result.next()) {
                 Client client = new Client();
+                client.setId(result.getInt("id"));
                 client.setName(result.getString("name"));
                 client.setLastname1(result.getString("lastname1"));
                 client.setLastname2(result.getString("lastname2"));
@@ -73,6 +106,7 @@ public class ClientManager {
             result = st.executeQuery("SELECT * FROM Client WHERE phone='" + phone + "';");
             if (result.next()) {
                 Client client = new Client();
+                client.setId(result.getInt("id"));
                 client.setName(result.getString("name"));
                 client.setLastname1(result.getString("lastname1"));
                 client.setLastname2(result.getString("lastname2"));
@@ -277,6 +311,7 @@ public class ClientManager {
                 result = st.executeQuery("SELECT * FROM Client WHERE name LIKE '%" + parameters.get("name") + "%';");
                 while (result.next()) {
                     Client client = new Client();
+                    client.setId(result.getInt("id"));
                     client.setName(result.getString("name"));
                     client.setLastname1(result.getString("lastname1"));
                     client.setLastname2(result.getString("lastname2"));
@@ -297,6 +332,7 @@ public class ClientManager {
                 result = st.executeQuery("SELECT * FROM Client WHERE lastname1 LIKE '%" + parameters.get("lastname1") + "%';");
                 while (result.next()) {
                     Client client = new Client();
+                    client.setId(result.getInt("id"));
                     client.setName(result.getString("name"));
                     client.setLastname1(result.getString("lastname1"));
                     client.setLastname2(result.getString("lastname2"));
@@ -317,6 +353,7 @@ public class ClientManager {
                 result = st.executeQuery("SELECT * FROM Client WHERE lastname2 LIKE '%" + parameters.get("lastname2") + "%';");
                 while (result.next()) {
                     Client client = new Client();
+                    client.setId(result.getInt("id"));
                     client.setName(result.getString("name"));
                     client.setLastname1(result.getString("lastname1"));
                     client.setLastname2(result.getString("lastname2"));
@@ -337,6 +374,7 @@ public class ClientManager {
                 result = st.executeQuery("SELECT * FROM Client WHERE dni LIKE '%" + parameters.get("dni") + "%';");
                 while (result.next()) {
                     Client client = new Client();
+                    client.setId(result.getInt("id"));
                     client.setName(result.getString("name"));
                     client.setLastname1(result.getString("lastname1"));
                     client.setLastname2(result.getString("lastname2"));
@@ -357,6 +395,7 @@ public class ClientManager {
                 result = st.executeQuery("SELECT * FROM Client WHERE phone LIKE '%" + parameters.get("phone") + "%';");
                 while (result.next()) {
                     Client client = new Client();
+                    client.setId(result.getInt("id"));
                     client.setName(result.getString("name"));
                     client.setLastname1(result.getString("lastname1"));
                     client.setLastname2(result.getString("lastname2"));
@@ -385,6 +424,7 @@ public class ClientManager {
         try {
             while (result.next()) {
                 Client client = new Client();
+                client.setId(result.getInt("id"));
                 client.setName(result.getString("name"));
                 client.setLastname1(result.getString("lastname1"));
                 client.setLastname2(result.getString("lastname2"));

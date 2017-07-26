@@ -8,19 +8,42 @@ package Modelo;
 /**
  *
  * @author araluce
+ * 
+ * Bill belongs to Client
+ * Bill has many Ups
+ * Bill has many Downs
  */
 public class Bill {
     
     private int id;
-    private Client cliente;
-    private int jamones;
-    private int paletas;
-    private float precio;
-    private String t_recepcion;
+    private Client client;
+    private Boolean delete;
     
     public Bill(){
-        this.cliente = null;
-        this.jamones = 0;
-        this.paletas = 0;
+        this.client = null;
+    }
+    
+    public int getId(){
+        return this.id;
+    }
+    
+    public Client getClient(){
+        return this.client;
+    }
+    
+    public Boolean getDelete(){
+        return this.delete;
+    }
+    
+    public int setId(int id){
+        return this.id = id;
+    }
+    
+    public Client setClient(Client client){
+        return this.client = client;
+    }
+    
+    public Boolean setDelete(Boolean delete){
+        return this.delete = delete;
     }
 }

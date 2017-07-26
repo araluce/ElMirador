@@ -5,6 +5,7 @@
  */
 package Modelo;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 /**
  *
@@ -19,6 +20,7 @@ public class Client {
     private String dni;
     private String phone;
     private Boolean delete;
+    private ArrayList<Bill> bills;
     
     private Calendar created_at;
     private Calendar updated_at;
@@ -31,6 +33,7 @@ public class Client {
         
         this.created_at = Calendar.getInstance();
         this.updated_at = Calendar.getInstance();
+        this.bills = new ArrayList<Bill>();
     }
     
     /**
@@ -115,6 +118,15 @@ public class Client {
     }
     
     /**
+     * Retorna las facturas/albaranes del cliente
+     *
+     * @return ArrayList<Bills>
+     */
+    public ArrayList<Bill> getBills() {
+        return this.bills;
+    }
+    
+    /**
      * Inserta el id de un cliente
      *
      * @return int
@@ -193,6 +205,39 @@ public class Client {
      */
     public Calendar setUpdatedAt(Calendar date) {
         return this.updated_at = date;
+    }
+    
+    /**
+     * Actializa las facturas/albaranes del cliente
+     *
+     * @return ArrayList<Bills>
+     */
+    public ArrayList<Bill> getBills(ArrayList<Bill> billCollection) {
+        return this.bills = billCollection;
+    }
+    
+    /**
+     * Actializa las facturas/albaranes del cliente
+     *
+     * @return ArrayList<Bills>
+     */
+    public ArrayList<Bill> addBill(Bill bill) {
+        this.bills.add(bill);
+        
+        return this.bills;
+    }
+    
+    /**
+     * Actializa las facturas/albaranes del cliente
+     *
+     * @return ArrayList<Bills>
+     */
+    public ArrayList<Bill> addBills(ArrayList<Bill> billCollection) {
+        for(Bill bill: billCollection) {
+            this.bills.add(bill);
+        }
+        
+        return this.bills;
     }
 
     @Override

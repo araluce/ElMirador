@@ -37,6 +37,7 @@ public class Seed {
     private void init(){
 //        this.dropTable("Client");
         this.createClientTableIfNotExists();
+        this.createBilltTableIfNotExists();
     }
     
     public void createClientTableIfNotExists() {
@@ -54,6 +55,21 @@ public class Seed {
 //                    + "updated_at Date NOT NULL"
                     + ")");
             System.out.println("Tabla Client creada correctamente");
+        } catch (SQLException ex) {
+            Logger.getLogger(Model.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    public void createBilltTableIfNotExists() {
+        try {
+            Statement st = this.model.getConnection().createStatement();
+            st.execute("CREATE TABLE IF NOT EXISTS Bill ("
+                    + "id int NOT NULL AUTO_INCREMENT, "
+                    + "client_id int NOT NULL, "
+//                    + "created_at Date NOT NULL, "
+//                    + "updated_at Date NOT NULL"
+                    + ")");
+            System.out.println("Tabla Bill creada correctamente");
         } catch (SQLException ex) {
             Logger.getLogger(Model.class.getName()).log(Level.SEVERE, null, ex);
         }
