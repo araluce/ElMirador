@@ -70,7 +70,6 @@ public class InputCliente extends JTextField {
 
             public void keyTyped(KeyEvent keyEvent) {
                 String busqueda = getText().toUpperCase();
-                System.out.println("Busqueda: '" + busqueda + "'");
                 if (busqueda.trim().equals("")) {
                     ClientManager cm = new ClientManager();
                     ArrayList<Client> arrayClientes = new ArrayList<Client>();
@@ -84,11 +83,11 @@ public class InputCliente extends JTextField {
                     ClientManager cm = new ClientManager();
                     ArrayList<Client> arrayClientes = new ArrayList<Client>();
                     Hashtable<String, String> parametros = new Hashtable<String, String>();
-                    parametros.put("nombre", busqueda);
-                    parametros.put("apellido1", busqueda);
-                    parametros.put("apellido2", busqueda);
+                    parametros.put("name", busqueda);
+                    parametros.put("lastname1", busqueda);
+                    parametros.put("lastname2", busqueda);
                     parametros.put("dni", busqueda);
-                    parametros.put("telefono", busqueda);
+                    parametros.put("phone", busqueda);
                     DefaultTableModel dtmodel = (DefaultTableModel) clientsTable.getModel();
                     dtmodel.setRowCount(0);
                     arrayClientes = cm.findClientsBy(m.getConnection(), parametros);
