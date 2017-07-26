@@ -33,7 +33,7 @@ public class Principal extends javax.swing.JFrame {
         InputCliente inputClientes = new InputCliente(modelo, clientsTable);
 
         initComponents();
-        
+
         this.inputSearchClientes = new JLabel();
         this.inputSearchClientes.setBorder(BorderFactory.createLineBorder(Color.black));
         this.inputSearchClientes.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Iconos/Search-24.png")));
@@ -48,7 +48,7 @@ public class Principal extends javax.swing.JFrame {
         clientsArray = cm.findAllClients(model.getConnection(), false);
         DefaultTableModel dtmodel = (DefaultTableModel) this.clientsTable.getModel();
         for (Client c : clientsArray) {
-            dtmodel.addRow(new Object[]{c.getName(), c.getLastname1()+ " " + c.getLastname2(), c.getDni(), c.getPhone()});
+            dtmodel.addRow(new Object[]{c.getName(), c.getLastname1() + " " + c.getLastname2(), c.getDni(), c.getPhone()});
         }
         panelResultadoBusquedaClientes.getViewport().add(this.clientsTable);
 
@@ -57,7 +57,7 @@ public class Principal extends javax.swing.JFrame {
         panelAreaClientes.setBackground(Color.WHITE);
         panelBusquedaClientes.setBackground(Color.WHITE);
         panelResultadoBusquedaClientes.getViewport().setBackground(Color.WHITE);
-        
+
         buttonAltaClientes.setBackground(Color.WHITE);
         buttonAltaClientes.setFocusPainted(false);
         buttonGestionClientes.setBackground(Color.WHITE);

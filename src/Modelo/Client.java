@@ -5,6 +5,7 @@
  */
 package Modelo;
 
+import java.util.Calendar;
 /**
  *
  * @author araluce
@@ -18,12 +19,18 @@ public class Client {
     private String dni;
     private String phone;
     private Boolean delete;
+    
+    private Calendar created_at;
+    private Calendar updated_at;
 
     /**
      * Client Constructor
      */
     public Client() {
         this.delete = false;
+        
+        this.created_at = Calendar.getInstance();
+        this.updated_at = Calendar.getInstance();
     }
     
     /**
@@ -90,6 +97,24 @@ public class Client {
     }
     
     /**
+     * Retorna la fecha de creacion
+     *
+     * @return Calendar
+     */
+    public Calendar getCreatedAt() {
+        return this.created_at;
+    }
+    
+    /**
+     * Retorna la fecha de actualizacion
+     *
+     * @return Calendar
+     */
+    public Calendar getUpdatedAt() {
+        return this.updated_at;
+    }
+    
+    /**
      * Inserta el id de un cliente
      *
      * @return int
@@ -150,6 +175,24 @@ public class Client {
      */
     public Boolean setDelete(Boolean delete) {
         return this.delete = delete;
+    }
+    
+    /**
+     * Actualiza la fecha de creacion
+     *
+     * @return Calendar
+     */
+    public Calendar setCreatedAt(Calendar date) {
+        return this.created_at = date;
+    }
+    
+    /**
+     * Actualiza la fecha de update
+     *
+     * @return Calendar
+     */
+    public Calendar setUpdatedAt(Calendar date) {
+        return this.updated_at = date;
     }
 
     @Override

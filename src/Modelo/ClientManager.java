@@ -10,6 +10,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Hashtable;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -39,13 +40,18 @@ public class ClientManager {
             Statement st = conn.createStatement();
             result = st.executeQuery("SELECT * FROM Client WHERE dni LIKE '" + dni + "';");
             if (result.next()) {
-                Client cliente = new Client();
-                cliente.setName(result.getString("name"));
-                cliente.setLastname1(result.getString("lastname1"));
-                cliente.setLastname2(result.getString("lastname2"));
-                cliente.setDni(result.getString("dni"));
-                cliente.setPhone(result.getString("phone"));
-                return cliente;
+                Client client = new Client();
+                client.setName(result.getString("name"));
+                client.setLastname1(result.getString("lastname1"));
+                client.setLastname2(result.getString("lastname2"));
+                client.setDni(result.getString("dni"));
+                client.setPhone(result.getString("phone"));
+//                Calendar date = Calendar.getInstance();
+//                date.setTime(result.getDate("created_at"));
+//                client.setCreatedAt(date);
+//                date.setTime(result.getDate("updated_at"));
+//                client.setUpdatedAt(date);
+                return client;
             }
         } catch (SQLException ex) {
             Logger.getLogger(Model.class.getName()).log(Level.SEVERE, null, ex);
@@ -72,6 +78,11 @@ public class ClientManager {
                 client.setLastname2(result.getString("lastname2"));
                 client.setDni(result.getString("dni"));
                 client.setPhone(result.getString("phone"));
+//                Calendar date = Calendar.getInstance();
+//                date.setTime(result.getDate("created_at"));
+//                client.setCreatedAt(date);
+//                date.setTime(result.getDate("updated_at"));
+//                client.setUpdatedAt(date);
                 return client;
             }
         } catch (SQLException ex) {
@@ -131,8 +142,19 @@ public class ClientManager {
     public int clientFlush(Connection conn, Client client) {
         int result = 0;
         try {
+            System.out.println(client.getCreatedAt().getTime().getClass().toString());
+
             Statement st = conn.createStatement();
-            String sql = "INSERT INTO Client (name, lastname1, lastname2, dni, phone) VALUES ('" + client.getName().toUpperCase() + "', '" + client.getLastname1().toUpperCase() + "', '" + client.getLastname2().toUpperCase() + "', '" + client.getDni().toUpperCase() + "', '" + client.getPhone() + "');";
+//            String sql = "INSERT INTO Client (name, lastname1, lastname2, dni, phone, created_at, updated_at) "
+            String sql = "INSERT INTO Client (name, lastname1, lastname2, dni, phone) "
+                    + "VALUES ("
+                    + "'" + client.getName().toUpperCase() + "', "
+                    + "'" + client.getLastname1().toUpperCase() + "', "
+                    + "'" + client.getLastname2().toUpperCase() + "', "
+                    + "'" + client.getDni().toUpperCase() + "', "
+                    + "'" + client.getPhone() + "');";
+//                    + "'" + client.getCreatedAt().currentTimeMillis() + "', "
+//                    + "'" + client.getUpdatedAt().currentTimeMillis() + "');";
             result = st.executeUpdate(sql);
         } catch (SQLException ex) {
             Logger.getLogger(Model.class.getName()).log(Level.SEVERE, null, ex);
@@ -210,7 +232,7 @@ public class ClientManager {
         ResultSet result = null;
         try {
             Statement st = conn.createStatement();
-            if(all){
+            if (all) {
                 result = st.executeQuery("SELECT * FROM Client;");
             } else {
                 result = st.executeQuery("SELECT * FROM Client WHERE delete != false;");
@@ -239,9 +261,13 @@ public class ClientManager {
         boolean isSetDni = parameters.containsKey("dni");
         boolean isSetPhone = parameters.containsKey("phone");
 
-        if (parameters.get("name").equals("") && parameters.get("lastname1").equals("")
-                && parameters.get("lastname2").equals("") && parameters.get("dni").equals("")
+        if (parameters.get("name").equals("")
+                && parameters.get("lastname1").equals("")
+                && parameters.get("lastname2").equals("")
+                && parameters.get("dni").equals("")
                 && parameters.get("phone").equals("")) {
+//                && parameters.get("created_at").equals("")
+//                && parameters.get("updated_at").equals("")) {
             return clientList;
         }
 
@@ -256,6 +282,11 @@ public class ClientManager {
                     client.setLastname2(result.getString("lastname2"));
                     client.setDni(result.getString("dni"));
                     client.setPhone(result.getString("phone"));
+//                    Calendar date = Calendar.getInstance();
+//                    date.setTime(result.getDate("created_at"));
+//                    client.setCreatedAt(date);
+//                    date.setTime(result.getDate("updated_at"));
+//                    client.setUpdatedAt(date);
                     if (!dniList.contains(client.getDni())) {
                         dniList.add(client.getDni());
                         clientList.add(client);
@@ -271,6 +302,11 @@ public class ClientManager {
                     client.setLastname2(result.getString("lastname2"));
                     client.setDni(result.getString("dni"));
                     client.setPhone(result.getString("phone"));
+//                    Calendar date = Calendar.getInstance();
+//                    date.setTime(result.getDate("created_at"));
+//                    client.setCreatedAt(date);
+//                    date.setTime(result.getDate("updated_at"));
+//                    client.setUpdatedAt(date);
                     if (!dniList.contains(client.getDni())) {
                         dniList.add(client.getDni());
                         clientList.add(client);
@@ -286,6 +322,11 @@ public class ClientManager {
                     client.setLastname2(result.getString("lastname2"));
                     client.setDni(result.getString("dni"));
                     client.setPhone(result.getString("phone"));
+//                    Calendar date = Calendar.getInstance();
+//                    date.setTime(result.getDate("created_at"));
+//                    client.setCreatedAt(date);
+//                    date.setTime(result.getDate("updated_at"));
+//                    client.setUpdatedAt(date);
                     if (!dniList.contains(client.getDni())) {
                         dniList.add(client.getDni());
                         clientList.add(client);
@@ -301,6 +342,11 @@ public class ClientManager {
                     client.setLastname2(result.getString("lastname2"));
                     client.setDni(result.getString("dni"));
                     client.setPhone(result.getString("phone"));
+//                    Calendar date = Calendar.getInstance();
+//                    date.setTime(result.getDate("created_at"));
+//                    client.setCreatedAt(date);
+//                    date.setTime(result.getDate("updated_at"));
+//                    client.setUpdatedAt(date);
                     if (!dniList.contains(client.getDni())) {
                         dniList.add(client.getDni());
                         clientList.add(client);
@@ -316,6 +362,11 @@ public class ClientManager {
                     client.setLastname2(result.getString("lastname2"));
                     client.setDni(result.getString("dni"));
                     client.setPhone(result.getString("phone"));
+//                    Calendar date = Calendar.getInstance();
+//                    date.setTime(result.getDate("created_at"));
+//                    client.setCreatedAt(date);
+//                    date.setTime(result.getDate("updated_at"));
+//                    client.setUpdatedAt(date);
                     if (!dniList.contains(client.getDni())) {
                         dniList.add(client.getDni());
                         clientList.add(client);
@@ -339,6 +390,11 @@ public class ClientManager {
                 client.setLastname2(result.getString("lastname2"));
                 client.setDni(result.getString("dni"));
                 client.setPhone(result.getString("phone"));
+//                Calendar date = Calendar.getInstance();
+//                date.setTime(result.getDate("created_at"));
+//                client.setCreatedAt(date);
+//                date.setTime(result.getDate("updated_at"));
+//                client.setUpdatedAt(date);
                 clientList.add(client);
             }
         } catch (SQLException ex) {

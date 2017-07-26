@@ -28,13 +28,14 @@ public class Seed {
         this.model = external_model;
         
         tablas = new ArrayList<String>();
-        tablas.add("CLIENTE");
-        tablas.add("ALBARAN");
+        tablas.add("Client");
+        tablas.add("Bill");
         
         this.init();
     }
     
     private void init(){
+//        this.dropTable("Client");
         this.createClientTableIfNotExists();
     }
     
@@ -48,7 +49,9 @@ public class Seed {
                     + "lastname2 varchar(20) NOT NULL, "
                     + "dni varchar(9) NOT NULL, "
                     + "phone varchar(9) NOT NULL, "
-                    + "delete boolean DEFAULT true"
+                    + "delete boolean DEFAULT true, "
+//                    + "created_at Date NOT NULL, "
+//                    + "updated_at Date NOT NULL"
                     + ")");
             System.out.println("Tabla Client creada correctamente");
         } catch (SQLException ex) {

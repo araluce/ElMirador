@@ -19,10 +19,7 @@ public class Inicio {
 
     public static void main(String[] args) {
         Model model = new Model();
-        Seed seed = new Seed(model); 
-        
-//        modelo.dropTable("CLIENTE");
-        
+        Seed seed = new Seed(model);        
         
         Principal principal = new Principal(model);
         principal.setVisible(true);
