@@ -176,8 +176,6 @@ public class ClientManager {
     public int clientFlush(Connection conn, Client client) {
         int result = 0;
         try {
-            System.out.println(client.getCreatedAt().getTime().getClass().toString());
-
             Statement st = conn.createStatement();
 //            String sql = "INSERT INTO Client (name, lastname1, lastname2, dni, phone, created_at, updated_at) "
             String sql = "INSERT INTO Client (name, lastname1, lastname2, dni, phone) "
