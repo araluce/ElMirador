@@ -8,8 +8,6 @@ package Inicio;
 import Ini.Seed;
 import Modelo.*;
 import Vista.*;
-import Ini.*;
-import java.util.ArrayList;
 
 /**
  *
@@ -18,10 +16,14 @@ import java.util.ArrayList;
 public class Inicio {
 
     public static void main(String[] args) {
-        Model model = new Model();
-        Seed seed = new Seed(model);        
-        
-        Principal principal = new Principal(model);
-        principal.setVisible(true);
+        {
+
+            Model model = new Model();
+            Principal principal = new Principal(model);
+
+            Seed seed = new Seed(model);
+
+            principal.setLocationRelativeTo(null);
+        }
     }
 }
