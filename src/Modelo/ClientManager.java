@@ -260,7 +260,7 @@ public class ClientManager {
      * @param lastname2
      * @return ArrayList<Client>|null
      */
-    public ArrayList<Client> findClientsByApellido2(Connection conn, String lastname2) {
+    public ArrayList<Client> findClientsByLastName2(Connection conn, String lastname2) {
         ArrayList<Client> clientList = new ArrayList<Client>();
         ResultSet result = null;
         try {

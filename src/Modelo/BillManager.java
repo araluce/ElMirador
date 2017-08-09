@@ -53,9 +53,9 @@ public class BillManager {
                 Calendar date = Calendar.getInstance();
                 try {
                     date.setTime(sdf.parse(result.getString("created_at")));
-                    client.setCreatedAt(date);
+                    bill.setCreatedAt(date);
                     date.setTime(sdf.parse(result.getString("updated_at")));
-                    client.setUpdatedAt(date);
+                    bill.setUpdatedAt(date);
                 } catch (ParseException ex) {
                     Logger.getLogger(ClientManager.class.getName()).log(Level.SEVERE, null, ex);
                 }
@@ -82,6 +82,23 @@ public class BillManager {
             result = st.executeQuery("SELECT * FROM Bill WHERE client_id LIKE '" + client.getId() + "';");
             if (result.next()) {
                 Bill bill = new Bill();
+                bill.setClient(client);
+                
+                Calendar date = Calendar.getInstance();
+                try {
+                    date.setTime(sdf.parse(result.getString("created_at")));
+                    bill.setCreatedAt(date);
+                    date.setTime(sdf.parse(result.getString("updated_at")));
+                    bill.setUpdatedAt(date);
+                } catch (ParseException ex) {
+                    Logger.getLogger(ClientManager.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                
+                // Get Inputs
+                
+                // Get Outputs
+                
+                // Get Unsubscribes
                 
                 return bill;
             }
@@ -126,11 +143,26 @@ public class BillManager {
                 Client client = cm.find(conn, result.getInt("client_id"));
                 bill.setClient(client);
                 
-//                Calendar date = Calendar.getInstance();
-//                date.setTime(result.getDate("created_at"));
-//                bill.setCreatedAt(date);
-//                date.setTime(result.getDate("updated_at"));
-//                bill.setUpdatedAt(date);
+                Calendar date = Calendar.getInstance();
+                try {
+                    date.setTime(sdf.parse(result.getString("created_at")));
+                    bill.setCreatedAt(date);
+                    date.setTime(sdf.parse(result.getString("updated_at")));
+                    bill.setUpdatedAt(date);
+                } catch (ParseException ex) {
+                    Logger.getLogger(ClientManager.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                
+                // Get Inputs
+                InputManager im = new InputManager();
+                ArrayList<Input> bills = im.findByBill(conn, bill);
+                bill.addInputs(bills);
+                
+                // Get Outputs
+                
+                // Get Unsubscribes
+                
+                
                 billList.add(bill);
             }
         } catch (SQLException ex) {
@@ -146,7 +178,7 @@ public class BillManager {
         try {
             Statement st = conn.createStatement();
             resp.setResponse("Albaran eliminado correctamente");
-            resp.setCode(st.executeUpdate("UPDATE Albaran "
+            resp.setCode(st.executeUpdate("UPDATE Bill "
                     + "SET delete = true "
                     + "WHERE id = " + bill.getId() + ";"));
         } catch (SQLException ex) {

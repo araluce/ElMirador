@@ -39,6 +39,7 @@ public class Seed {
 //        this.dropTable("Bill");
         this.createClientTableIfNotExists();
         this.createBilltTableIfNotExists();
+        this.createImputTableIfNotExists();
     }
     
     public void createClientTableIfNotExists() {
@@ -56,6 +57,26 @@ public class Seed {
                     + "updated_at varchar(30) NOT NULL"
                     + ")");
             System.out.println("Tabla Client creada correctamente");
+        } catch (SQLException ex) {
+            Logger.getLogger(Model.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    public void createImputTableIfNotExists() {
+        try {
+            Statement st = this.model.getConnection().createStatement();
+            st.execute("CREATE TABLE IF NOT EXISTS Input ("
+                    + "id int NOT NULL AUTO_INCREMENT, "
+                    + "bill_id int NOT NULL, "
+                    + "date_input varchar(30) NOT NULL, "
+                    + "lot_number int NOT NULL AUTO_INCREMENT, "
+                    + "weight float NOT NULL, "
+                    + "price float NOT NULL, "
+                    + "t_reception varchar(20) NOT NULL, "
+                    + "num_hams int NOT NULL, "
+                    + "num_palettes int NOT NULL, "
+                    + ")");
+            System.out.println("Tabla Inputs creada correctamente");
         } catch (SQLException ex) {
             Logger.getLogger(Model.class.getName()).log(Level.SEVERE, null, ex);
         }

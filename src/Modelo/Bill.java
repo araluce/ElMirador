@@ -13,21 +13,21 @@ import java.util.Calendar;
  * @author araluce
  * 
  * Bill belongs to Client
- * Bill has many Ups
- * Bill has many Downs
+ * Bill has many Inputs
+ * Bill has many Outputs
  */
 public class Bill {
     
     private int id;
     private Client client;
     private Boolean delete;
-    private ArrayList<Input> ups;
+    private ArrayList<Input> inputs;
     private Calendar created_at;
     private Calendar updated_at;
     
     public Bill(){
         this.client = null;
-        this.ups = new ArrayList<Input>();
+        this.inputs = new ArrayList<Input>();
         this.created_at = Calendar.getInstance();
         this.updated_at = Calendar.getInstance();
     }
@@ -40,8 +40,8 @@ public class Bill {
         return this.client;
     }
     
-    public ArrayList<Input> getUps(){
-        return this.ups;
+    public ArrayList<Input> getInputs(){
+        return this.inputs;
     }
     
     public Boolean getDelete(){
@@ -72,22 +72,22 @@ public class Bill {
         return this.client = client;
     }
     
-    public ArrayList<Input> setUps(ArrayList<Input> upsCollection){
-        return this.ups = upsCollection;
+    public ArrayList<Input> setInputs(ArrayList<Input> inputsCollection){
+        return this.inputs = inputsCollection;
     }
     
-    public ArrayList<Input> addUps(ArrayList<Input> upsCollection){
-        for(Input up: upsCollection){
-            this.ups.add(up);
+    public ArrayList<Input> addInputs(ArrayList<Input> inputsCollection){
+        for(Input up: inputsCollection){
+            this.inputs.add(up);
         }
         
-        return this.ups;
+        return this.inputs;
     }
     
-    public ArrayList<Input> addUp(Input up){
-        this.ups.add(up);
+    public ArrayList<Input> addInput(Input input){
+        this.inputs.add(input);
         
-        return this.ups;
+        return this.inputs;
     }
     
     public Boolean setDelete(Boolean delete){
