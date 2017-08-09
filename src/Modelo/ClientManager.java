@@ -6,12 +6,16 @@
 package Modelo;
 
 import java.sql.Connection;
+import java.util.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Hashtable;
+import java.util.Locale;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import src.Response;
@@ -27,6 +31,8 @@ public class ClientManager {
      */
     public ClientManager() {
     }
+
+    SimpleDateFormat sdf = new SimpleDateFormat("dd MMM yyyy HH:mm:ss", Locale.GERMANY);
 
     /* Encuentra un cliente por dni
      *
@@ -46,11 +52,15 @@ public class ClientManager {
                 client.setLastname2(result.getString("lastname2"));
                 client.setDni(result.getString("dni"));
                 client.setPhone(result.getString("phone"));
-//                Calendar date = Calendar.getInstance();
-//                date.setTime(result.getDate("created_at"));
-//                client.setCreatedAt(date);
-//                date.setTime(result.getDate("updated_at"));
-//                client.setUpdatedAt(date);
+                Calendar date = Calendar.getInstance();
+                try {
+                    date.setTime(sdf.parse(result.getString("created_at")));
+                    client.setCreatedAt(date);
+                    date.setTime(sdf.parse(result.getString("updated_at")));
+                    client.setUpdatedAt(date);
+                } catch (ParseException ex) {
+                    Logger.getLogger(ClientManager.class.getName()).log(Level.SEVERE, null, ex);
+                }
                 return client;
             }
         } catch (SQLException ex) {
@@ -79,11 +89,15 @@ public class ClientManager {
                 client.setLastname2(result.getString("lastname2"));
                 client.setDni(result.getString("dni"));
                 client.setPhone(result.getString("phone"));
-//                Calendar date = Calendar.getInstance();
-//                date.setTime(result.getDate("created_at"));
-//                client.setCreatedAt(date);
-//                date.setTime(result.getDate("updated_at"));
-//                client.setUpdatedAt(date);
+                Calendar date = Calendar.getInstance();
+                try {
+                    date.setTime(sdf.parse(result.getString("created_at")));
+                    client.setCreatedAt(date);
+                    date.setTime(sdf.parse(result.getString("updated_at")));
+                    client.setUpdatedAt(date);
+                } catch (ParseException ex) {
+                    Logger.getLogger(ClientManager.class.getName()).log(Level.SEVERE, null, ex);
+                }
                 return client;
             }
         } catch (SQLException ex) {
@@ -112,11 +126,16 @@ public class ClientManager {
                 client.setLastname2(result.getString("lastname2"));
                 client.setDni(result.getString("dni"));
                 client.setPhone(result.getString("phone"));
-//                Calendar date = Calendar.getInstance();
-//                date.setTime(result.getDate("created_at"));
-//                client.setCreatedAt(date);
-//                date.setTime(result.getDate("updated_at"));
-//                client.setUpdatedAt(date);
+                Calendar date = Calendar.getInstance();
+                try {
+                    date.setTime(sdf.parse(result.getString("created_at")));
+                    client.setCreatedAt(date);
+                    date.setTime(sdf.parse(result.getString("updated_at")));
+                    client.setUpdatedAt(date);
+                } catch (ParseException ex) {
+                    Logger.getLogger(ClientManager.class.getName()).log(Level.SEVERE, null, ex);
+                }
+
                 return client;
             }
         } catch (SQLException ex) {
@@ -177,16 +196,17 @@ public class ClientManager {
         int result = 0;
         try {
             Statement st = conn.createStatement();
-//            String sql = "INSERT INTO Client (name, lastname1, lastname2, dni, phone, created_at, updated_at) "
-            String sql = "INSERT INTO Client (name, lastname1, lastname2, dni, phone) "
+            String sql = "INSERT INTO Client (name, lastname1, lastname2, dni, phone, created_at, updated_at) "
+                    //            String sql = "INSERT INTO Client (name, lastname1, lastname2, dni, phone) "
                     + "VALUES ("
-                    + "'" + client.getName().toUpperCase() + "', "
-                    + "'" + client.getLastname1().toUpperCase() + "', "
-                    + "'" + client.getLastname2().toUpperCase() + "', "
-                    + "'" + client.getDni().toUpperCase() + "', "
-                    + "'" + client.getPhone() + "');";
-//                    + "'" + client.getCreatedAt().currentTimeMillis() + "', "
-//                    + "'" + client.getUpdatedAt().currentTimeMillis() + "');";
+                    + "'" + client.getName().toUpperCase()
+                    + "', '" + client.getLastname1().toUpperCase()
+                    + "', '" + client.getLastname2().toUpperCase()
+                    + "', '" + client.getDni().toUpperCase()
+                    + "', '" + client.getPhone()
+                    + "', '" + sdf.format((Date) client.getCreatedAt().getTime()) 
+                    + "', '" + sdf.format((Date) client.getUpdatedAt().getTime()) 
+                    + "');";
             result = st.executeUpdate(sql);
         } catch (SQLException ex) {
             Logger.getLogger(Model.class.getName()).log(Level.SEVERE, null, ex);
@@ -240,7 +260,7 @@ public class ClientManager {
      * @param lastname2
      * @return ArrayList<Client>|null
      */
-    public ArrayList<Client> findClientsByApellido2(Connection conn, String lastname2) {
+    public ArrayList<Client> findClientsByLastName2(Connection conn, String lastname2) {
         ArrayList<Client> clientList = new ArrayList<Client>();
         ResultSet result = null;
         try {
@@ -297,9 +317,9 @@ public class ClientManager {
                 && parameters.get("lastname1").equals("")
                 && parameters.get("lastname2").equals("")
                 && parameters.get("dni").equals("")
-                && parameters.get("phone").equals("")) {
-//                && parameters.get("created_at").equals("")
-//                && parameters.get("updated_at").equals("")) {
+                && parameters.get("phone").equals("")
+                && parameters.get("created_at").equals("")
+                && parameters.get("updated_at").equals("")) {
             return clientList;
         }
 
@@ -315,11 +335,15 @@ public class ClientManager {
                     client.setLastname2(result.getString("lastname2"));
                     client.setDni(result.getString("dni"));
                     client.setPhone(result.getString("phone"));
-//                    Calendar date = Calendar.getInstance();
-//                    date.setTime(result.getDate("created_at"));
-//                    client.setCreatedAt(date);
-//                    date.setTime(result.getDate("updated_at"));
-//                    client.setUpdatedAt(date);
+                    Calendar date = Calendar.getInstance();
+                    try {
+                        date.setTime(sdf.parse(result.getString("created_at")));
+                        client.setCreatedAt(date);
+                        date.setTime(sdf.parse(result.getString("updated_at")));
+                        client.setUpdatedAt(date);
+                    } catch (ParseException ex) {
+                        Logger.getLogger(ClientManager.class.getName()).log(Level.SEVERE, null, ex);
+                    }
                     if (!dniList.contains(client.getDni())) {
                         dniList.add(client.getDni());
                         clientList.add(client);
@@ -336,11 +360,15 @@ public class ClientManager {
                     client.setLastname2(result.getString("lastname2"));
                     client.setDni(result.getString("dni"));
                     client.setPhone(result.getString("phone"));
-//                    Calendar date = Calendar.getInstance();
-//                    date.setTime(result.getDate("created_at"));
-//                    client.setCreatedAt(date);
-//                    date.setTime(result.getDate("updated_at"));
-//                    client.setUpdatedAt(date);
+                    Calendar date = Calendar.getInstance();
+                    try {
+                        date.setTime(sdf.parse(result.getString("created_at")));
+                        client.setCreatedAt(date);
+                        date.setTime(sdf.parse(result.getString("updated_at")));
+                        client.setUpdatedAt(date);
+                    } catch (ParseException ex) {
+                        Logger.getLogger(ClientManager.class.getName()).log(Level.SEVERE, null, ex);
+                    }
                     if (!dniList.contains(client.getDni())) {
                         dniList.add(client.getDni());
                         clientList.add(client);
@@ -357,11 +385,15 @@ public class ClientManager {
                     client.setLastname2(result.getString("lastname2"));
                     client.setDni(result.getString("dni"));
                     client.setPhone(result.getString("phone"));
-//                    Calendar date = Calendar.getInstance();
-//                    date.setTime(result.getDate("created_at"));
-//                    client.setCreatedAt(date);
-//                    date.setTime(result.getDate("updated_at"));
-//                    client.setUpdatedAt(date);
+                    Calendar date = Calendar.getInstance();
+                    try {
+                        date.setTime(sdf.parse(result.getString("created_at")));
+                        client.setCreatedAt(date);
+                        date.setTime(sdf.parse(result.getString("updated_at")));
+                        client.setUpdatedAt(date);
+                    } catch (ParseException ex) {
+                        Logger.getLogger(ClientManager.class.getName()).log(Level.SEVERE, null, ex);
+                    }
                     if (!dniList.contains(client.getDni())) {
                         dniList.add(client.getDni());
                         clientList.add(client);
@@ -378,11 +410,15 @@ public class ClientManager {
                     client.setLastname2(result.getString("lastname2"));
                     client.setDni(result.getString("dni"));
                     client.setPhone(result.getString("phone"));
-//                    Calendar date = Calendar.getInstance();
-//                    date.setTime(result.getDate("created_at"));
-//                    client.setCreatedAt(date);
-//                    date.setTime(result.getDate("updated_at"));
-//                    client.setUpdatedAt(date);
+                    Calendar date = Calendar.getInstance();
+                    try {
+                        date.setTime(sdf.parse(result.getString("created_at")));
+                        client.setCreatedAt(date);
+                        date.setTime(sdf.parse(result.getString("updated_at")));
+                        client.setUpdatedAt(date);
+                    } catch (ParseException ex) {
+                        Logger.getLogger(ClientManager.class.getName()).log(Level.SEVERE, null, ex);
+                    }
                     if (!dniList.contains(client.getDni())) {
                         dniList.add(client.getDni());
                         clientList.add(client);
@@ -399,11 +435,15 @@ public class ClientManager {
                     client.setLastname2(result.getString("lastname2"));
                     client.setDni(result.getString("dni"));
                     client.setPhone(result.getString("phone"));
-//                    Calendar date = Calendar.getInstance();
-//                    date.setTime(result.getDate("created_at"));
-//                    client.setCreatedAt(date);
-//                    date.setTime(result.getDate("updated_at"));
-//                    client.setUpdatedAt(date);
+                    Calendar date = Calendar.getInstance();
+                    try {
+                        date.setTime(sdf.parse(result.getString("created_at")));
+                        client.setCreatedAt(date);
+                        date.setTime(sdf.parse(result.getString("updated_at")));
+                        client.setUpdatedAt(date);
+                    } catch (ParseException ex) {
+                        Logger.getLogger(ClientManager.class.getName()).log(Level.SEVERE, null, ex);
+                    }
                     if (!dniList.contains(client.getDni())) {
                         dniList.add(client.getDni());
                         clientList.add(client);
@@ -428,11 +468,15 @@ public class ClientManager {
                 client.setLastname2(result.getString("lastname2"));
                 client.setDni(result.getString("dni"));
                 client.setPhone(result.getString("phone"));
-//                Calendar date = Calendar.getInstance();
-//                date.setTime(result.getDate("created_at"));
-//                client.setCreatedAt(date);
-//                date.setTime(result.getDate("updated_at"));
-//                client.setUpdatedAt(date);
+                Calendar date = Calendar.getInstance();
+                try {
+                    date.setTime(sdf.parse(result.getString("created_at")));
+                    client.setCreatedAt(date);
+                    date.setTime(sdf.parse(result.getString("updated_at")));
+                    client.setUpdatedAt(date);
+                } catch (ParseException ex) {
+                    Logger.getLogger(ClientManager.class.getName()).log(Level.SEVERE, null, ex);
+                }
                 clientList.add(client);
             }
         } catch (SQLException ex) {

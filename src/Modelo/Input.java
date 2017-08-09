@@ -15,13 +15,14 @@ import java.util.Calendar;
  * Bill has many Ups
  * Bill has many Downs
  */
-public class Up {
+public class Input {
     
     private int id;
     private Bill bill;
+    private Calendar date_input;
     private int lot_number;
     private float weight;
-    private double price;
+    private float price;
     private String t_reception;
     private int num_hams;
     private int num_palettes;
@@ -29,8 +30,9 @@ public class Up {
     private Calendar created_at;
     private Calendar updated_at;
     
-    public Up(){
+    public Input(){
         this.bill = null;
+        this.date_input = Calendar.getInstance();
         this.lot_number = 0;
         this.weight = 0;
         this.price = 0;
@@ -46,6 +48,10 @@ public class Up {
     
     public Bill getBill(){
         return this.bill;
+    }
+    
+    public Calendar getDateInput(){
+        return this.date_input;
     }
     
     public Boolean getDelete(){
@@ -92,6 +98,10 @@ public class Up {
         return this.bill = bill;
     }
     
+    public Calendar setDateInput(Calendar date_input){
+        return this.date_input = date_input;
+    }
+    
     public Boolean setDelete(Boolean delete){
         return this.delete = delete;
     }
@@ -104,28 +114,28 @@ public class Up {
         return this.updated_at = updated_at;
     }
 
-    public void setLotNumber(int lot_number) {
-        this.lot_number = lot_number;
+    public int setLotNumber(int lot_number) {
+        return this.lot_number = lot_number;
     }
 
-    public void setWeight(float weight) {
-        this.weight = weight;
+    public float setWeight(float weight) {
+        return this.weight = weight;
     }
 
-    public void setPrice(double price) {
-        this.price = price;
+    public float setPrice(float price) {
+        return this.price = price;
     }
 
-    public void setTReception(String t_reception) {
-        this.t_reception = t_reception;
+    public String setTReception(String t_reception) {
+        return this.t_reception = t_reception;
     }
 
-    public void setNumHams(int num_hams) {
-        this.num_hams = num_hams;
+    public int setNumHams(int num_hams) {
+        return this.num_hams = num_hams;
     }
 
-    public void setNumPalettes(int num_palettes) {
-        this.num_palettes = num_palettes;
+    public int setNumPalettes(int num_palettes) {
+        return this.num_palettes = num_palettes;
     }
     
 }
