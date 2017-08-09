@@ -21,13 +21,13 @@ public class Bill {
     private int id;
     private Client client;
     private Boolean delete;
-    private ArrayList<Up> ups;
+    private ArrayList<In> ups;
     private Calendar created_at;
     private Calendar updated_at;
     
     public Bill(){
         this.client = null;
-        this.ups = new ArrayList<Up>();
+        this.ups = new ArrayList<In>();
         this.created_at = Calendar.getInstance();
         this.updated_at = Calendar.getInstance();
     }
@@ -40,7 +40,7 @@ public class Bill {
         return this.client;
     }
     
-    public ArrayList<Up> getUps(){
+    public ArrayList<In> getUps(){
         return this.ups;
     }
     
@@ -72,19 +72,19 @@ public class Bill {
         return this.client = client;
     }
     
-    public ArrayList<Up> setUps(ArrayList<Up> upsCollection){
+    public ArrayList<In> setUps(ArrayList<In> upsCollection){
         return this.ups = upsCollection;
     }
     
-    public ArrayList<Up> addUps(ArrayList<Up> upsCollection){
-        for(Up up: upsCollection){
+    public ArrayList<In> addUps(ArrayList<In> upsCollection){
+        for(In up: upsCollection){
             this.ups.add(up);
         }
         
         return this.ups;
     }
     
-    public ArrayList<Up> addUp(Up up){
+    public ArrayList<In> addUp(In up){
         this.ups.add(up);
         
         return this.ups;
