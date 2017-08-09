@@ -5,8 +5,11 @@
  */
 package Modelo;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
 /**
  *
  * @author araluce
@@ -24,6 +27,8 @@ public class Client {
     
     private Calendar created_at;
     private Calendar updated_at;
+    
+    SimpleDateFormat sdf = new SimpleDateFormat("dd MMM yyyy HH:mm:ss", Locale.GERMANY);
 
     /**
      * Client Constructor
@@ -245,6 +250,8 @@ public class Client {
         return "Nombre y apellidos: " + this.name + " " + this.lastname1 + " " + this.lastname2 + "\n"
                 + "Dni: " + this.dni + "\n"
                 + "Teléfono: " + this.phone + "\n"
+                + "Creado el: " + sdf.format((Date) this.created_at.getTime()) + "\n"
+                + "Actualizado el: " + sdf.format((Date) this.updated_at.getTime()) + "\n"
                 + "Borrado: " + this.delete;
     }
 }

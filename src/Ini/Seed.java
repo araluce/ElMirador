@@ -36,6 +36,7 @@ public class Seed {
     
     private void init(){
 //        this.dropTable("Client");
+//        this.dropTable("Bill");
         this.createClientTableIfNotExists();
         this.createBilltTableIfNotExists();
     }
@@ -51,8 +52,8 @@ public class Seed {
                     + "dni varchar(9) NOT NULL, "
                     + "phone varchar(9) NOT NULL, "
                     + "delete boolean DEFAULT true, "
-//                    + "created_at Date NOT NULL, "
-//                    + "updated_at Date NOT NULL"
+                    + "created_at varchar(30) NOT NULL, "
+                    + "updated_at varchar(30) NOT NULL"
                     + ")");
             System.out.println("Tabla Client creada correctamente");
         } catch (SQLException ex) {
@@ -66,8 +67,8 @@ public class Seed {
             st.execute("CREATE TABLE IF NOT EXISTS Bill ("
                     + "id int NOT NULL AUTO_INCREMENT, "
                     + "client_id int NOT NULL, "
-//                    + "created_at Date NOT NULL, "
-//                    + "updated_at Date NOT NULL"
+                    + "created_at varchar(30) NOT NULL, "
+                    + "updated_at varchar(30) NOT NULL"
                     + ")");
             System.out.println("Tabla Bill creada correctamente");
         } catch (SQLException ex) {

@@ -6,6 +6,7 @@
 package Modelo;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 
 /**
  *
@@ -21,10 +22,14 @@ public class Bill {
     private Client client;
     private Boolean delete;
     private ArrayList<Up> ups;
+    private Calendar created_at;
+    private Calendar updated_at;
     
     public Bill(){
         this.client = null;
         this.ups = new ArrayList<Up>();
+        this.created_at = Calendar.getInstance();
+        this.updated_at = Calendar.getInstance();
     }
     
     public int getId(){
@@ -43,8 +48,24 @@ public class Bill {
         return this.delete;
     }
     
+    public Calendar getCreatedAt(){
+        return this.created_at;
+    }
+    
+    public Calendar getUpdatedAt(){
+        return this.updated_at;
+    }
+    
     public int setId(int id){
         return this.id = id;
+    }
+    
+    public Calendar setCreatedAt(Calendar created_at){
+        return this.created_at = created_at;
+    }
+    
+    public Calendar setUpdatedAt(Calendar updated_at){
+        return this.updated_at = updated_at;
     }
     
     public Client setClient(Client client){

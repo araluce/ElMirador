@@ -24,6 +24,7 @@ public class Inicio {
             Seed seed = new Seed(model);
 
             principal.setLocationRelativeTo(null);
+
         }
     }
 }
