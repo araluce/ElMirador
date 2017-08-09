@@ -15,7 +15,7 @@ import java.util.Calendar;
  * Bill has many Ups
  * Bill has many Downs
  */
-public class In {
+public class Input {
     
     private int id;
     private Bill bill;
@@ -29,7 +29,7 @@ public class In {
     private Calendar created_at;
     private Calendar updated_at;
     
-    public In(){
+    public Input(){
         this.bill = null;
         this.lot_number = 0;
         this.weight = 0;
