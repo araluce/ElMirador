@@ -27,7 +27,7 @@ import src.Response;
 public class InputManager {
 
     /**
-     * Constructor de ClienteManager
+     * Constructor InputeManager
      */
     public InputManager() {
     }
@@ -36,14 +36,15 @@ public class InputManager {
 
     /* Encuentra una entrada por id
      *
-     * @param dni 8 caracteres y 1 letra que identifican a un cliente
-     * @return Client|null
+     * @param conn
+     * @param id
+     * @return Input|null
      */
     public Input find(Connection conn, int id) {
         ResultSet result = null;
         try {
             Statement st = conn.createStatement();
-            result = st.executeQuery("SELECT * FROM Client WHERE id LIKE '" + id + "';");
+            result = st.executeQuery("SELECT * FROM Input WHERE id LIKE '" + id + "';");
             if (result.next()) {
                 Input input = new Input();
                 input.setId(result.getInt("id"));
@@ -86,7 +87,7 @@ public class InputManager {
      *
      * @param bill A bill
      * @param conn
-     * @return Client|null
+     * @return Input|null
      */
     public ArrayList<Input> findByBill(Connection conn, Bill bill) {
         ArrayList<Input> inputs = null;
@@ -104,10 +105,10 @@ public class InputManager {
     }
 
     /**
-     * Inserta un nuevo cliente en la tabla Client
+     * Inserta un nuevo input en la tabla Input
      *
      * @param conn
-     * @param client
+     * @param input
      * @return int
      */
     public int flush(Connection conn, Input input) {
@@ -117,19 +118,20 @@ public class InputManager {
             String sql = "INSERT INTO Input ("
                     + "bill_id, date_input, lot_number, "
                     + "weight, price, t_reception, "
-                    + "num_hams, num_palettes, "
+                    + "num_hams, num_palettes, delete"
                     + "created_at, updated_at) "
                     + "VALUES ("
-                    + "'" + input.getBill().getId()
-                    + "', '" + sdf.format((Date)input.getDateInput().getTime())
-                    + "', '" + input.getLotNumber()
-                    + "', '" + input.getWeight()
-                    + "', '" + input.getPrice()
-                    + "', '" + input.getTReception().toUpperCase()
-                    + "', '" + input.getNumHams()
-                    + "', '" + input.getNumPalettes()
-                    + "', '" + sdf.format((Date) input.getCreatedAt().getTime()) 
-                    + "', '" + sdf.format((Date) input.getUpdatedAt().getTime()) 
+                    + "" + input.getBill().getId()
+                    + ", '" + sdf.format((Date)input.getDateInput().getTime())
+                    + "', " + input.getLotNumber()
+                    + ", " + input.getWeight()
+                    + ", " + input.getPrice()
+                    + ", '" + input.getTReception().toUpperCase()
+                    + "', " + input.getNumHams()
+                    + ", " + input.getNumPalettes()
+                    + ", " + input.getDelete()
+                    + ", '" + sdf.format((Date) input.getCreatedAt().getTime()) 
+                    + "', '" + sdf.format((Date) input.getUpdatedAt().getTime())
                     + "');";
             result = st.executeUpdate(sql);
         } catch (SQLException ex) {

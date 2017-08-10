@@ -75,6 +75,7 @@ public class Seed {
                     + "t_reception varchar(20) NOT NULL, "
                     + "num_hams int NOT NULL, "
                     + "num_palettes int NOT NULL, "
+                    + "delete boolean DEFAULT true "
                     + ")");
             System.out.println("Tabla Inputs creada correctamente");
         } catch (SQLException ex) {
@@ -95,6 +96,7 @@ public class Seed {
                     + "tagged varchar(30) NOT NULL, "
                     + "num_hams int NOT NULL, "
                     + "num_palettes int NOT NULL, "
+                    + "delete boolean DEFAULT true"
                     + ")");
             System.out.println("Tabla Outputs creada correctamente");
         } catch (SQLException ex) {
@@ -110,6 +112,7 @@ public class Seed {
                     + "client_id int NOT NULL, "
                     + "created_at varchar(30) NOT NULL, "
                     + "updated_at varchar(30) NOT NULL"
+                    + "delete boolean DEFAULT true"
                     + ")");
             System.out.println("Tabla Bill creada correctamente");
         } catch (SQLException ex) {

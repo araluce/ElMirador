@@ -50,6 +50,9 @@ public class BillManager {
                 ClientManager cm = new ClientManager();
                 Client client = cm.find(conn, result.getInt("client_id"));
                 bill.setClient(client);
+                
+                bill.setDelete(result.getBoolean("delete"));
+                
                 Calendar date = Calendar.getInstance();
                 try {
                     date.setTime(sdf.parse(result.getString("created_at")));
@@ -83,6 +86,8 @@ public class BillManager {
             if (result.next()) {
                 Bill bill = new Bill();
                 bill.setClient(client);
+                
+                bill.setDelete(result.getBoolean("delete"));
                 
                 Calendar date = Calendar.getInstance();
                 try {
@@ -142,6 +147,8 @@ public class BillManager {
                 ClientManager cm = new ClientManager();
                 Client client = cm.find(conn, result.getInt("client_id"));
                 bill.setClient(client);
+                
+                bill.setDelete(result.getBoolean("delete"));
                 
                 Calendar date = Calendar.getInstance();
                 try {

@@ -52,6 +52,7 @@ public class ClientManager {
                 client.setLastname2(result.getString("lastname2"));
                 client.setDni(result.getString("dni"));
                 client.setPhone(result.getString("phone"));
+                client.setDelete(result.getBoolean("delete"));
                 Calendar date = Calendar.getInstance();
                 try {
                     date.setTime(sdf.parse(result.getString("created_at")));
@@ -89,6 +90,7 @@ public class ClientManager {
                 client.setLastname2(result.getString("lastname2"));
                 client.setDni(result.getString("dni"));
                 client.setPhone(result.getString("phone"));
+                client.setDelete(result.getBoolean("delete"));
                 Calendar date = Calendar.getInstance();
                 try {
                     date.setTime(sdf.parse(result.getString("created_at")));
@@ -126,6 +128,7 @@ public class ClientManager {
                 client.setLastname2(result.getString("lastname2"));
                 client.setDni(result.getString("dni"));
                 client.setPhone(result.getString("phone"));
+                client.setDelete(result.getBoolean("delete"));
                 Calendar date = Calendar.getInstance();
                 try {
                     date.setTime(sdf.parse(result.getString("created_at")));
@@ -196,7 +199,7 @@ public class ClientManager {
         int result = 0;
         try {
             Statement st = conn.createStatement();
-            String sql = "INSERT INTO Client (name, lastname1, lastname2, dni, phone, created_at, updated_at) "
+            String sql = "INSERT INTO Client (name, lastname1, lastname2, dni, phone, delete, created_at, updated_at) "
                     //            String sql = "INSERT INTO Client (name, lastname1, lastname2, dni, phone) "
                     + "VALUES ("
                     + "'" + client.getName().toUpperCase()
@@ -205,8 +208,9 @@ public class ClientManager {
                     + "', '" + client.getDni().toUpperCase()
                     + "', '" + client.getPhone()
                     + "', '" + sdf.format((Date) client.getCreatedAt().getTime()) 
-                    + "', '" + sdf.format((Date) client.getUpdatedAt().getTime()) 
-                    + "');";
+                    + "', '" + sdf.format((Date) client.getUpdatedAt().getTime())
+                    + "', " + client.getDelete()
+                    + ");";
             result = st.executeUpdate(sql);
         } catch (SQLException ex) {
             Logger.getLogger(Model.class.getName()).log(Level.SEVERE, null, ex);
@@ -335,6 +339,7 @@ public class ClientManager {
                     client.setLastname2(result.getString("lastname2"));
                     client.setDni(result.getString("dni"));
                     client.setPhone(result.getString("phone"));
+                    client.setDelete(result.getBoolean("delete"));
                     Calendar date = Calendar.getInstance();
                     try {
                         date.setTime(sdf.parse(result.getString("created_at")));
@@ -360,6 +365,7 @@ public class ClientManager {
                     client.setLastname2(result.getString("lastname2"));
                     client.setDni(result.getString("dni"));
                     client.setPhone(result.getString("phone"));
+                    client.setDelete(result.getBoolean("delete"));
                     Calendar date = Calendar.getInstance();
                     try {
                         date.setTime(sdf.parse(result.getString("created_at")));
@@ -385,6 +391,7 @@ public class ClientManager {
                     client.setLastname2(result.getString("lastname2"));
                     client.setDni(result.getString("dni"));
                     client.setPhone(result.getString("phone"));
+                    client.setDelete(result.getBoolean("delete"));
                     Calendar date = Calendar.getInstance();
                     try {
                         date.setTime(sdf.parse(result.getString("created_at")));
@@ -410,6 +417,7 @@ public class ClientManager {
                     client.setLastname2(result.getString("lastname2"));
                     client.setDni(result.getString("dni"));
                     client.setPhone(result.getString("phone"));
+                    client.setDelete(result.getBoolean("delete"));
                     Calendar date = Calendar.getInstance();
                     try {
                         date.setTime(sdf.parse(result.getString("created_at")));
@@ -435,6 +443,7 @@ public class ClientManager {
                     client.setLastname2(result.getString("lastname2"));
                     client.setDni(result.getString("dni"));
                     client.setPhone(result.getString("phone"));
+                    client.setDelete(result.getBoolean("delete"));
                     Calendar date = Calendar.getInstance();
                     try {
                         date.setTime(sdf.parse(result.getString("created_at")));
@@ -468,6 +477,7 @@ public class ClientManager {
                 client.setLastname2(result.getString("lastname2"));
                 client.setDni(result.getString("dni"));
                 client.setPhone(result.getString("phone"));
+                client.setDelete(result.getBoolean("delete"));
                 Calendar date = Calendar.getInstance();
                 try {
                     date.setTime(sdf.parse(result.getString("created_at")));
