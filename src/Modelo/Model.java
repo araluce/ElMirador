@@ -28,7 +28,7 @@ public class Model {
     public Model() {
         try {
             Class.forName("org.h2.Driver");
-            this.conn = DriverManager.getConnection("jdbc:h2:../elMiradorDB;IFEXISTS=TRUE", "test", "test");
+            this.conn = DriverManager.getConnection("jdbc:h2:./elMiradorDB;IFEXISTS=TRUE", "test", "test");
         } catch (SQLException ex) {
             Logger.getLogger(Model.class.getName()).log(Level.SEVERE, null, ex);
         } catch (ClassNotFoundException ex) {
