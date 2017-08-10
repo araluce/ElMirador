@@ -82,6 +82,26 @@ public class Seed {
         }
     }
     
+    public void createOutputTableIfNotExists() {
+        try {
+            Statement st = this.model.getConnection().createStatement();
+            st.execute("CREATE TABLE IF NOT EXISTS Output ("
+                    + "id int NOT NULL AUTO_INCREMENT, "
+                    + "bill_id int NOT NULL, "
+                    + "client_id int NOT NULL, "
+                    + "pref_consumption varchar(30) NOT NULL, "
+                    + "date_output varchar(30) NOT NULL, "
+                    + "destination varchar(30) NOT NULL, "
+                    + "tagged varchar(30) NOT NULL, "
+                    + "num_hams int NOT NULL, "
+                    + "num_palettes int NOT NULL, "
+                    + ")");
+            System.out.println("Tabla Outputs creada correctamente");
+        } catch (SQLException ex) {
+            Logger.getLogger(Model.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
     public void createBilltTableIfNotExists() {
         try {
             Statement st = this.model.getConnection().createStatement();
