@@ -144,21 +144,21 @@ public class OutputManager1 {
             String sql = "INSERT INTO Output ("
                     + "bill_id, client_id, date_output, "
                     + "pref_consumption, destination, tagged, "
-                    + "num_hams, num_palettes, "
-                    + "created_at, updated_at, delete) "
+                    + "num_hams, num_palettes, delete"
+                    + "created_at, updated_at,) "
                     + "VALUES ("
-                    + "'" + output.getBill().getId()
-                    + "', '" + output.getClient().getId()
-                    + "', '" + sdf.format((Date)output.getDateOutput().getTime())
+                    + "" + output.getBill().getId()
+                    + ", " + output.getClient().getId()
+                    + ", '" + sdf.format((Date)output.getDateOutput().getTime())
                     + "', '" + sdf.format((Date)output.getPrefConsuption().getTime())
                     + "', '" + output.getDestination()
                     + "', '" + output.getTagged()
                     + "', " + output.getNumHams()
                     + ", " + output.getNumPalettes()
+                    + ", " + output.getDelete()
                     + ", '" + sdf.format((Date) output.getCreatedAt().getTime()) 
                     + "', '" + sdf.format((Date) output.getUpdatedAt().getTime())
-                    + "', " + output.getDelete()
-                    + ");";
+                    + "');";
             result = st.executeUpdate(sql);
         } catch (SQLException ex) {
             Logger.getLogger(Model.class.getName()).log(Level.SEVERE, null, ex);

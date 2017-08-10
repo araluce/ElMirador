@@ -118,19 +118,20 @@ public class InputManager {
             String sql = "INSERT INTO Input ("
                     + "bill_id, date_input, lot_number, "
                     + "weight, price, t_reception, "
-                    + "num_hams, num_palettes, "
+                    + "num_hams, num_palettes, delete"
                     + "created_at, updated_at) "
                     + "VALUES ("
-                    + "'" + input.getBill().getId()
-                    + "', '" + sdf.format((Date)input.getDateInput().getTime())
-                    + "', '" + input.getLotNumber()
-                    + "', '" + input.getWeight()
-                    + "', '" + input.getPrice()
-                    + "', '" + input.getTReception().toUpperCase()
-                    + "', '" + input.getNumHams()
-                    + "', '" + input.getNumPalettes()
-                    + "', '" + sdf.format((Date) input.getCreatedAt().getTime()) 
-                    + "', '" + sdf.format((Date) input.getUpdatedAt().getTime()) 
+                    + "" + input.getBill().getId()
+                    + ", '" + sdf.format((Date)input.getDateInput().getTime())
+                    + "', " + input.getLotNumber()
+                    + ", " + input.getWeight()
+                    + ", " + input.getPrice()
+                    + ", '" + input.getTReception().toUpperCase()
+                    + "', " + input.getNumHams()
+                    + ", " + input.getNumPalettes()
+                    + ", " + input.getDelete()
+                    + ", '" + sdf.format((Date) input.getCreatedAt().getTime()) 
+                    + "', '" + sdf.format((Date) input.getUpdatedAt().getTime())
                     + "');";
             result = st.executeUpdate(sql);
         } catch (SQLException ex) {
