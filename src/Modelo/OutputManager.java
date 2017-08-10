@@ -24,12 +24,12 @@ import src.Response;
  *
  * @author araluce
  */
-public class OutputManager1 {
+public class OutputManager {
 
     /**
      * Constructor de ClienteManager
      */
-    public OutputManager1() {
+    public OutputManager() {
     }
 
     SimpleDateFormat sdf = new SimpleDateFormat("dd MMM yyyy HH:mm:ss", Locale.GERMANY);
@@ -73,7 +73,7 @@ public class OutputManager1 {
                     date.setTime(sdf.parse(result.getString("updated_at")));
                     output.setUpdatedAt(date);
                 } catch (ParseException ex) {
-                    Logger.getLogger(OutputManager1.class.getName()).log(Level.SEVERE, null, ex);
+                    Logger.getLogger(OutputManager.class.getName()).log(Level.SEVERE, null, ex);
                 }
                 return output;
             }
@@ -197,7 +197,7 @@ public class OutputManager1 {
                     date.setTime(sdf.parse(result.getString("updated_at")));
                     output.setUpdatedAt(date);
                 } catch (ParseException ex) {
-                    Logger.getLogger(OutputManager1.class.getName()).log(Level.SEVERE, null, ex);
+                    Logger.getLogger(OutputManager.class.getName()).log(Level.SEVERE, null, ex);
                 }
                 
                 outputs.add(output);

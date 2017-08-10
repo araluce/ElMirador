@@ -51,6 +51,18 @@ public class BillManager {
                 Client client = cm.find(conn, result.getInt("client_id"));
                 bill.setClient(client);
                 
+                // Find Inputs
+                InputManager im = new InputManager();
+                ArrayList<Input> inputs = im.findByBill(conn, bill);
+                bill.addInputs(inputs);
+                
+                // Find Outputs
+                OutputManager om = new OutputManager();
+                ArrayList<Output> outputs = om.findByBill(conn, bill);
+                bill.addOutputs(outputs);
+                
+                // Find Unsubscribes
+                
                 bill.setDelete(result.getBoolean("delete"));
                 
                 Calendar date = Calendar.getInstance();
@@ -62,12 +74,6 @@ public class BillManager {
                 } catch (ParseException ex) {
                     Logger.getLogger(ClientManager.class.getName()).log(Level.SEVERE, null, ex);
                 }
-                
-                // Find Ins
-                
-                // Find Outs
-                
-                // Find Unsubscribes
                 
                 return bill;
             }
@@ -99,11 +105,17 @@ public class BillManager {
                     Logger.getLogger(ClientManager.class.getName()).log(Level.SEVERE, null, ex);
                 }
                 
-                // Get Inputs
+                // Find Inputs
+                InputManager im = new InputManager();
+                ArrayList<Input> inputs = im.findByBill(conn, bill);
+                bill.addInputs(inputs);
                 
-                // Get Outputs
+                // Find Outputs
+                OutputManager om = new OutputManager();
+                ArrayList<Output> outputs = om.findByBill(conn, bill);
+                bill.addOutputs(outputs);
                 
-                // Get Unsubscribes
+                // Find Unsubscribes
                 
                 return bill;
             }
@@ -115,9 +127,11 @@ public class BillManager {
     }
     
     /**
-     * Encuentra a todos los clientes
+     * Find all bills
      *
-     * @return ArrayList<Client>|null
+     * @param conn
+     * @param all
+     * @return ArrayList<Bill>|null
      */
     public ArrayList<Bill> findAll(Connection conn, boolean all) {
         ArrayList<Bill> billList = new ArrayList<Bill>();
@@ -148,6 +162,18 @@ public class BillManager {
                 Client client = cm.find(conn, result.getInt("client_id"));
                 bill.setClient(client);
                 
+                // Find Inputs
+                InputManager im = new InputManager();
+                ArrayList<Input> inputs = im.findByBill(conn, bill);
+                bill.addInputs(inputs);
+                
+                // Find Outputs
+                OutputManager om = new OutputManager();
+                ArrayList<Output> outputs = om.findByBill(conn, bill);
+                bill.addOutputs(outputs);
+                
+                // Find Unsubscribes
+                
                 bill.setDelete(result.getBoolean("delete"));
                 
                 Calendar date = Calendar.getInstance();
@@ -159,16 +185,6 @@ public class BillManager {
                 } catch (ParseException ex) {
                     Logger.getLogger(ClientManager.class.getName()).log(Level.SEVERE, null, ex);
                 }
-                
-                // Get Inputs
-                InputManager im = new InputManager();
-                ArrayList<Input> bills = im.findByBill(conn, bill);
-                bill.addInputs(bills);
-                
-                // Get Outputs
-                
-                // Get Unsubscribes
-                
                 
                 billList.add(bill);
             }
