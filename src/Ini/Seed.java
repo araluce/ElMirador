@@ -35,11 +35,18 @@ public class Seed {
     }
     
     private void init(){
+//        For cleaning tables
 //        this.dropTable("Client");
 //        this.dropTable("Bill");
+//        this.dropTable("Input");
+//        this.dropTable("Output");
+//        this.dropTable("Unsubscribe");
+
         this.createClientTableIfNotExists();
         this.createBilltTableIfNotExists();
-        this.createImputTableIfNotExists();
+        this.createInputTableIfNotExists();
+        this.createOutputTableIfNotExists();
+        this.createUnsubscribeTableIfNotExists();
     }
     
     public void createClientTableIfNotExists() {
@@ -62,7 +69,7 @@ public class Seed {
         }
     }
     
-    public void createImputTableIfNotExists() {
+    public void createInputTableIfNotExists() {
         try {
             Statement st = this.model.getConnection().createStatement();
             st.execute("CREATE TABLE IF NOT EXISTS Input ("
@@ -75,7 +82,9 @@ public class Seed {
                     + "t_reception varchar(20) NOT NULL, "
                     + "num_hams int NOT NULL, "
                     + "num_palettes int NOT NULL, "
-                    + "delete boolean DEFAULT true "
+                    + "delete boolean DEFAULT true, "
+                    + "created_at varchar(30) NOT NULL, "
+                    + "updated_at varchar(30) NOT NULL"
                     + ")");
             System.out.println("Tabla Inputs creada correctamente");
         } catch (SQLException ex) {
@@ -96,9 +105,32 @@ public class Seed {
                     + "tagged varchar(30) NOT NULL, "
                     + "num_hams int NOT NULL, "
                     + "num_palettes int NOT NULL, "
-                    + "delete boolean DEFAULT true"
+                    + "delete boolean DEFAULT true, "
+                    + "created_at varchar(30) NOT NULL, "
+                    + "updated_at varchar(30) NOT NULL"
                     + ")");
             System.out.println("Tabla Outputs creada correctamente");
+        } catch (SQLException ex) {
+            Logger.getLogger(Model.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    public void createUnsubscribeTableIfNotExists() {
+        try {
+            Statement st = this.model.getConnection().createStatement();
+            st.execute("CREATE TABLE IF NOT EXISTS Unsubscribe ("
+                    + "id int NOT NULL AUTO_INCREMENT, "
+                    + "bill_id int NOT NULL, "
+                    + "date_unsubscribe varchar(30) NOT NULL, "
+                    + "num_hams_unsubscribes int NOT NULL, "
+                    + "num_palettes_unsubscribes int NOT NULL, "
+                    + "reason varchar(250) NOT NULL, "
+                    + "observations varchar(250) NOT NULL, "
+                    + "delete boolean DEFAULT true, "
+                    + "created_at varchar(30) NOT NULL, "
+                    + "updated_at varchar(30) NOT NULL"
+                    + ")");
+            System.out.println("Tabla Inputs creada correctamente");
         } catch (SQLException ex) {
             Logger.getLogger(Model.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -111,7 +143,7 @@ public class Seed {
                     + "id int NOT NULL AUTO_INCREMENT, "
                     + "client_id int NOT NULL, "
                     + "created_at varchar(30) NOT NULL, "
-                    + "updated_at varchar(30) NOT NULL"
+                    + "updated_at varchar(30) NOT NULL, "
                     + "delete boolean DEFAULT true"
                     + ")");
             System.out.println("Tabla Bill creada correctamente");
@@ -123,7 +155,7 @@ public class Seed {
     public void dropTable(String table){
         try {
             Statement st = this.model.getConnection().createStatement();
-            st.execute("DROP TABLE " + table);
+            st.execute("DROP TABLE " + table + " IF EXISTS ");
             System.out.println("Tabla " + table + " borrada correctamente");
         } catch (SQLException ex) {
             Logger.getLogger(Model.class.getName()).log(Level.SEVERE, null, ex);

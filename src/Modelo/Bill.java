@@ -15,6 +15,7 @@ import java.util.Calendar;
  * Bill belongs to Client
  * Bill has many Inputs
  * Bill has many Outputs
+ * Bill has many Unsubscribes
  */
 public class Bill {
     
@@ -23,6 +24,7 @@ public class Bill {
     private Boolean delete;
     private ArrayList<Input> inputs;
     private ArrayList<Output> outputs;
+    private ArrayList<Unsubscribe> unsubscribes;
     private Calendar created_at;
     private Calendar updated_at;
     
@@ -30,6 +32,7 @@ public class Bill {
         this.client = null;
         this.inputs = new ArrayList<Input>();
         this.outputs = new ArrayList<Output>();
+        this.unsubscribes = new ArrayList<Unsubscribe>();
         this.created_at = Calendar.getInstance();
         this.updated_at = Calendar.getInstance();
     }
@@ -48,6 +51,10 @@ public class Bill {
     
     public ArrayList<Output> getOutputs(){
         return this.outputs;
+    }
+    
+    public ArrayList<Unsubscribe> getUnsubscribes(){
+        return this.unsubscribes;
     }
     
     public Boolean getDelete(){
@@ -86,6 +93,10 @@ public class Bill {
         return this.outputs = outputsCollection;
     }
     
+    public ArrayList<Unsubscribe> setUnsubscribes(ArrayList<Unsubscribe> unsubscribesCollection){
+        return this.unsubscribes = unsubscribesCollection;
+    }
+    
     public ArrayList<Input> addInputs(ArrayList<Input> inputsCollection){
         for(Input input: inputsCollection){
             this.inputs.add(input);
@@ -102,6 +113,14 @@ public class Bill {
         return this.outputs;
     }
     
+    public ArrayList<Unsubscribe> addUnsubscribes(ArrayList<Unsubscribe> unsubscribesCollection){
+        for(Unsubscribe unsubscribe: unsubscribesCollection){
+            this.unsubscribes.add(unsubscribe);
+        }
+        
+        return this.unsubscribes;
+    }
+    
     public ArrayList<Input> addInput(Input input){
         this.inputs.add(input);
         
@@ -112,6 +131,12 @@ public class Bill {
         this.outputs.add(output);
         
         return this.outputs;
+    }
+    
+    public ArrayList<Unsubscribe> addUnsubscribe(Unsubscribe unsubscribe){
+        this.unsubscribes.add(unsubscribe);
+        
+        return this.unsubscribes;
     }
     
     public Boolean setDelete(Boolean delete){
