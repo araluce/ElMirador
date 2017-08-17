@@ -1,0 +1,16 @@
+2017-08-17 19:22:44 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLException: Tabla "OUTPUT" no encontrada
+Table "OUTPUT" not found; SQL statement:
+DROP TABLE Output [42102-193]
+2017-08-17 19:22:44 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLException: Tabla "UNSUBSCRIBE" no encontrada
+Table "UNSUBSCRIBE" not found; SQL statement:
+DROP TABLE Unsubscribe [42102-193]
+2017-08-17 19:22:45 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLException: Error de Sintaxis en sentencia SQL "CREATE TABLE IF NOT EXISTS BILL (ID INT NOT NULL AUTO_INCREMENT, CLIENT_ID INT NOT NULL, CREATED_AT VARCHAR(30) NOT NULL, UPDATED_AT VARCHAR(30) NOT NULLDELETE[*] BOOLEAN DEFAULT TRUE) "; se esperaba "NULL"
+Syntax error in SQL statement "CREATE TABLE IF NOT EXISTS BILL (ID INT NOT NULL AUTO_INCREMENT, CLIENT_ID INT NOT NULL, CREATED_AT VARCHAR(30) NOT NULL, UPDATED_AT VARCHAR(30) NOT NULLDELETE[*] BOOLEAN DEFAULT TRUE) "; expected "NULL"; SQL statement:
+CREATE TABLE IF NOT EXISTS Bill (id int NOT NULL AUTO_INCREMENT, client_id int NOT NULL, created_at varchar(30) NOT NULL, updated_at varchar(30) NOT NULLdelete boolean DEFAULT true) [42001-193]
+2017-08-17 19:23:51 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLException: Error de Sintaxis en sentencia SQL "CREATE TABLE IF NOT EXISTS BILL (ID INT NOT NULL AUTO_INCREMENT, CLIENT_ID INT NOT NULL, CREATED_AT VARCHAR(30) NOT NULL, UPDATED_AT VARCHAR(30) NOT NULLDELETE[*] BOOLEAN DEFAULT TRUE) "; se esperaba "NULL"
+Syntax error in SQL statement "CREATE TABLE IF NOT EXISTS BILL (ID INT NOT NULL AUTO_INCREMENT, CLIENT_ID INT NOT NULL, CREATED_AT VARCHAR(30) NOT NULL, UPDATED_AT VARCHAR(30) NOT NULLDELETE[*] BOOLEAN DEFAULT TRUE) "; expected "NULL"; SQL statement:
+CREATE TABLE IF NOT EXISTS Bill (id int NOT NULL AUTO_INCREMENT, client_id int NOT NULL, created_at varchar(30) NOT NULL, updated_at varchar(30) NOT NULLdelete boolean DEFAULT true) [42001-193]

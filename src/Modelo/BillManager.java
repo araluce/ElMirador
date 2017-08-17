@@ -62,6 +62,9 @@ public class BillManager {
                 bill.addOutputs(outputs);
                 
                 // Find Unsubscribes
+                UnsubscribeManager um = new UnsubscribeManager();
+                ArrayList<Unsubscribe> unsubscribes = um.findByBill(conn, bill);
+                bill.addUnsubscribes(unsubscribes);
                 
                 bill.setDelete(result.getBoolean("delete"));
                 
@@ -116,6 +119,9 @@ public class BillManager {
                 bill.addOutputs(outputs);
                 
                 // Find Unsubscribes
+                UnsubscribeManager um = new UnsubscribeManager();
+                ArrayList<Unsubscribe> unsubscribes = um.findByBill(conn, bill);
+                bill.addUnsubscribes(unsubscribes);
                 
                 return bill;
             }
@@ -173,6 +179,9 @@ public class BillManager {
                 bill.addOutputs(outputs);
                 
                 // Find Unsubscribes
+                UnsubscribeManager um = new UnsubscribeManager();
+                ArrayList<Unsubscribe> unsubscribes = um.findByBill(conn, bill);
+                bill.addUnsubscribes(unsubscribes);
                 
                 bill.setDelete(result.getBoolean("delete"));
                 
