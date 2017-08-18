@@ -6,12 +6,10 @@
 package Componentes;
 
 import Modelo.*;
-import Vista.ClientRegister;
 import Vista.ClientDirectory;
 import java.awt.Color;
 import java.awt.Font;
 import java.util.ArrayList;
-import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
@@ -22,28 +20,26 @@ import javax.swing.table.JTableHeader;
  *
  * @author araluce
  */
-public class ClientsTable extends JTable {
+public class BillsTable extends JTable {
 
     private Model model;
-    private ClientsTable thisTable = null;
-    private BillsTable billsTable = null;
+    private BillsTable thisTable = null;
 
-    public ClientsTable(Model model, BillsTable billsTable) {
+    public BillsTable(Model model) {
         setBackground(Color.WHITE);
         thisTable = this;
         this.model = model;
-        this.billsTable = billsTable;
         this.setModel(new javax.swing.table.DefaultTableModel(
                 new Object[][]{},
                 new String[]{
-                    "Nombre", "Apellidos", "DNI", "Teléfono"
+                    "Albarán", "Entradas", "Retiradas", "Bajas"
                 }
         ) {
             Class[] types = new Class[]{
-                java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
+                java.lang.String.class, java.lang.Integer.class, java.lang.Integer.class, java.lang.Integer.class
             };
             boolean[] canEdit = new boolean[]{
-                false, false, false, false, false
+                false, false, false, false
             };
 
             public Class getColumnClass(int columnIndex) {
@@ -54,7 +50,7 @@ public class ClientsTable extends JTable {
                 return canEdit[columnIndex];
             }
         });
-        this.setToolTipText("Tabla de clientes");
+        this.setToolTipText("Tabla de albaranes");
         this.setColumnSelectionAllowed(true);
         this.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
 
@@ -67,33 +63,15 @@ public class ClientsTable extends JTable {
         }
         final JTable table = this;
         final Model m = this.model;
-        final BillsTable bt = this.billsTable;
         this.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
             @Override
             public void valueChanged(ListSelectionEvent event) {
                 if (event.getValueIsAdjusting()) {
-                    String dni = table.getValueAt(table.getSelectedRow(), 2).toString();
-
-                    ClientManager cm = new ClientManager();
-                    Client client = cm.findOneClientByDni(m.getConnection(), dni);
-
-                    BillManager bm = new BillManager();
-                    ArrayList<Bill> billsArray = bm.findByClient(m.getConnection(), client, false);
-
-                    DefaultTableModel dtmodel = (DefaultTableModel) bt.getModel();
-                    for (Bill b : billsArray) {
-                        ArrayList<Input> inputs = b.getInputs();
-                        ArrayList<Output> outputs = b.getOutputs();
-                        ArrayList<Unsubscribe> unsubscribes = b.getUnsubscribes();
-                        
-                        dtmodel.addRow(new Object[]{b.getId(), inputs.size(), outputs.size(), unsubscribes.size() });
-                    }
                     
-                    bt.setVisible(true);
                 }
             }
-            
-        });
+        }
+        );
         Color colorHeader = new Color(40, 96, 144);
         JTableHeader header = getTableHeader();
         header.setBackground(colorHeader);

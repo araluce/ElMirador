@@ -115,7 +115,7 @@ public class UnsubscribeManager {
             Statement st = conn.createStatement();
             String sql = "INSERT INTO Unsubscribe ("
                     + "bill_id, date_unsubscribe, num_hams_unsubscribes, num_palettes_unsubscribes, "
-                    + "reason, observations, delete"
+                    + "reason, observations, delete, "
                     + "created_at, updated_at) "
                     + "VALUES ("
                     + "" + unsubscribe.getBill().getId()

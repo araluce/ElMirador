@@ -195,7 +195,7 @@ public class ClientManager {
      * @param client
      * @return int
      */
-    public int clientFlush(Connection conn, Client client) {
+    public int flush(Connection conn, Client client) {
         int result = 0;
         try {
             Statement st = conn.createStatement();
@@ -207,10 +207,10 @@ public class ClientManager {
                     + "', '" + client.getLastname2().toUpperCase()
                     + "', '" + client.getDni().toUpperCase()
                     + "', '" + client.getPhone()
-                    + "', '" + sdf.format((Date) client.getCreatedAt().getTime()) 
-                    + "', '" + sdf.format((Date) client.getUpdatedAt().getTime())
                     + "', " + client.getDelete()
-                    + ");";
+                    + ", '" + sdf.format((Date) client.getCreatedAt().getTime()) 
+                    + "', '" + sdf.format((Date) client.getUpdatedAt().getTime())
+                    + "');";
             result = st.executeUpdate(sql);
         } catch (SQLException ex) {
             Logger.getLogger(Model.class.getName()).log(Level.SEVERE, null, ex);
@@ -281,17 +281,19 @@ public class ClientManager {
     /**
      * Encuentra a todos los clientes
      *
+     * @param conn
+     * @param all
      * @return ArrayList<Client>|null
      */
     public ArrayList<Client> findAllClients(Connection conn, boolean all) {
         ArrayList<Client> clientList = new ArrayList<Client>();
-        ResultSet result = null;
         try {
+            ResultSet result = null;
             Statement st = conn.createStatement();
             if (all) {
                 result = st.executeQuery("SELECT * FROM Client;");
             } else {
-                result = st.executeQuery("SELECT * FROM Client WHERE delete != false;");
+                result = st.executeQuery("SELECT * FROM Client WHERE delete = false;");
             }
             clientList = resultSetToArray(result);
         } catch (SQLException ex) {

@@ -30,6 +30,7 @@ public class Bill {
     
     public Bill(){
         this.client = null;
+        this.delete = false;
         this.inputs = new ArrayList<Input>();
         this.outputs = new ArrayList<Output>();
         this.unsubscribes = new ArrayList<Unsubscribe>();

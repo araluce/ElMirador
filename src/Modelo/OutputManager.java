@@ -144,7 +144,7 @@ public class OutputManager {
             String sql = "INSERT INTO Output ("
                     + "bill_id, client_id, date_output, "
                     + "pref_consumption, destination, tagged, "
-                    + "num_hams, num_palettes, delete"
+                    + "num_hams, num_palettes, delete, "
                     + "created_at, updated_at,) "
                     + "VALUES ("
                     + "" + output.getBill().getId()

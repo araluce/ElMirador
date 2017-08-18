@@ -118,7 +118,7 @@ public class InputManager {
             String sql = "INSERT INTO Input ("
                     + "bill_id, date_input, lot_number, "
                     + "weight, price, t_reception, "
-                    + "num_hams, num_palettes, delete"
+                    + "num_hams, num_palettes, delete, "
                     + "created_at, updated_at) "
                     + "VALUES ("
                     + "" + input.getBill().getId()

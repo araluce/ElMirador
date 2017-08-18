@@ -150,8 +150,7 @@ public class EditClientDirectory extends javax.swing.JFrame {
                     inputDni.setText("");
                     inputPhone.setText("");
 
-                    int result = cm.clientFlush(model.getConnection(), client);
-                    System.out.println(result);
+                    int result = cm.flush(model.getConnection(), client);
                     if (result == 0) {
                         JOptionPane.showMessageDialog(thisForm, "Se ha prodicido un error y no se ha dado de alta al cliente", "ERROR", JOptionPane.ERROR_MESSAGE);
                     } else {

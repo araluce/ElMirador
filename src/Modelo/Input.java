@@ -40,6 +40,7 @@ public class Input {
         this.num_palettes = 0;
         this.created_at = Calendar.getInstance();
         this.updated_at = Calendar.getInstance();
+        this.delete = false;
     }
     
     public int getId(){
@@ -136,6 +137,21 @@ public class Input {
 
     public int setNumPalettes(int num_palettes) {
         return this.num_palettes = num_palettes;
+    }
+    
+    public String toString(){
+        return "id: " + getId() + "\n"
+                + "bill_id: " + getBill().getId()+ "\n"
+                + "t_recepction: " + getTReception()+ "\n"
+                + "lot number: " + getLotNumber()+ "\n"
+                + "number of hams: " + getNumHams()+ "\n"
+                + "number of palettes: " + getNumPalettes()+ "\n"
+                + "price: " + getPrice()+ "\n"
+                + "weight: " + getWeight()+ "\n"
+                + "delete: " + getDelete()+ "\n"
+                + "created at: " + getCreatedAt()+ "\n"
+                + "updated at: " + getUpdatedAt()+ "\n"
+                + "";
     }
     
 }

@@ -166,8 +166,7 @@ public class ClientRegister extends javax.swing.JFrame {
                     inputDni.setText("");
                     inputPhone.setText("");
 
-                    int resultado = cm.clientFlush(model.getConnection(), cliente);
-                    System.out.println(resultado);
+                    int resultado = cm.flush(model.getConnection(), cliente);
                     if (resultado == 0) {
                         JOptionPane.showMessageDialog(thisForm, "Se ha prodicido un error y no se ha dado de alta al cliente", "ERROR", JOptionPane.ERROR_MESSAGE);
                     } else {

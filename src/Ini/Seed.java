@@ -35,7 +35,7 @@ public class Seed {
     }
     
     private void init(){
-//        For cleaning tables
+////        For cleaning tables
 //        this.dropTable("Client");
 //        this.dropTable("Bill");
 //        this.dropTable("Input");
@@ -59,7 +59,7 @@ public class Seed {
                     + "lastname2 varchar(20) NOT NULL, "
                     + "dni varchar(9) NOT NULL, "
                     + "phone varchar(9) NOT NULL, "
-                    + "delete boolean DEFAULT true, "
+                    + "delete boolean DEFAULT false, "
                     + "created_at varchar(30) NOT NULL, "
                     + "updated_at varchar(30) NOT NULL"
                     + ")");
@@ -82,7 +82,7 @@ public class Seed {
                     + "t_reception varchar(20) NOT NULL, "
                     + "num_hams int NOT NULL, "
                     + "num_palettes int NOT NULL, "
-                    + "delete boolean DEFAULT true, "
+                    + "delete boolean DEFAULT false, "
                     + "created_at varchar(30) NOT NULL, "
                     + "updated_at varchar(30) NOT NULL"
                     + ")");
@@ -105,7 +105,7 @@ public class Seed {
                     + "tagged varchar(30) NOT NULL, "
                     + "num_hams int NOT NULL, "
                     + "num_palettes int NOT NULL, "
-                    + "delete boolean DEFAULT true, "
+                    + "delete boolean DEFAULT false, "
                     + "created_at varchar(30) NOT NULL, "
                     + "updated_at varchar(30) NOT NULL"
                     + ")");
@@ -126,7 +126,7 @@ public class Seed {
                     + "num_palettes_unsubscribes int NOT NULL, "
                     + "reason varchar(250) NOT NULL, "
                     + "observations varchar(250) NOT NULL, "
-                    + "delete boolean DEFAULT true, "
+                    + "delete boolean DEFAULT false, "
                     + "created_at varchar(30) NOT NULL, "
                     + "updated_at varchar(30) NOT NULL"
                     + ")");
@@ -144,7 +144,7 @@ public class Seed {
                     + "client_id int NOT NULL, "
                     + "created_at varchar(30) NOT NULL, "
                     + "updated_at varchar(30) NOT NULL, "
-                    + "delete boolean DEFAULT true"
+                    + "delete boolean DEFAULT false"
                     + ")");
             System.out.println("Tabla Bill creada correctamente");
         } catch (SQLException ex) {

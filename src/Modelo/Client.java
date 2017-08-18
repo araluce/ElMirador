@@ -247,7 +247,8 @@ public class Client {
 
     @Override
     public String toString() {
-        return "Nombre y apellidos: " + this.name + " " + this.lastname1 + " " + this.lastname2 + "\n"
+        return "id: " + this.id + "\n"
+                + "Nombre y apellidos: " + this.name + " " + this.lastname1 + " " + this.lastname2 + "\n"
                 + "Dni: " + this.dni + "\n"
                 + "Teléfono: " + this.phone + "\n"
                 + "Creado el: " + sdf.format((Date) this.created_at.getTime()) + "\n"

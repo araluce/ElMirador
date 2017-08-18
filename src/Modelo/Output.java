@@ -37,6 +37,7 @@ public class Output {
         this.num_palettes = 0;
         this.created_at = Calendar.getInstance();
         this.updated_at = Calendar.getInstance();
+        this.delete = false;
     }
     
     public int getId(){

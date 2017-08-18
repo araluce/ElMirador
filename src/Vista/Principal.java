@@ -15,16 +15,17 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Vector;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import static javax.swing.WindowConstants.DISPOSE_ON_CLOSE;
 import javax.swing.border.Border;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -35,6 +36,7 @@ public class Principal extends javax.swing.JFrame {
 
     private Model model = null;
     private ClientsTable clientsTable = null;
+    private BillsTable billsTable = null;
     private JLabel inputSearchClientes = null;
 
     // Tab1
@@ -45,8 +47,21 @@ public class Principal extends javax.swing.JFrame {
     private JTextField inputPhone = new JTextField();
     private JButton registerButtonTab1 = new JButton();
 
+    // Tab2
+    private JComboBox clientSelect;
+    private Client client_selected_new_bill;
+    private JTextField dni_client = new JTextField();
+    private JTextField inputLotNumber = new JTextField();
+    private JTextField inputWeight = new JTextField();
+    private JTextField inputPrice = new JTextField();
+    private JTextField inputTReception = new JTextField();
+    private JTextField inputNumHams = new JTextField();
+    private JTextField inputNumPalettes = new JTextField();
+    private JButton registerButtonTab2 = new JButton();
+
     /**
      * Creates new form Principal
+     *
      * @param Model modelo -> The model
      */
     public Principal(Model modelo) {
@@ -55,20 +70,28 @@ public class Principal extends javax.swing.JFrame {
         setVisible(true);
 
         this.model = modelo;
-        clientsTable = new ClientsTable(modelo);
+        billsTable = new BillsTable(modelo);
+        clientsTable = new ClientsTable(modelo, billsTable);
 
         initComponents();
-        
+
         this.setTitle("EM - Gestión");
         this.title.setText("  JAMONES EL MIRADOR - GESTIÓN DE ALBARANES");
-        
+
         this.hideTabHeader();
         this.initializeComponents();
         this.componentsStyles();
         this.addComponentTab1();
-        
+        this.addComponentTab2();
+
         panelResultadoBusquedaClientes.getViewport().add(this.clientsTable);
+        this.billsTable.setVisible(false);
+        panelResultadosAlbaranes.getViewport().add(this.billsTable);
         panelBusquedaClientes.add(this.inputSearchClientes);
+        
+        BillManager bm = new BillManager();
+        ArrayList<Bill> billsArray = bm.findAll(model.getConnection(), true);
+        System.out.println("Total bills: " + billsArray.size());
 
     }
 
@@ -83,33 +106,63 @@ public class Principal extends javax.swing.JFrame {
             }
         });
     }
-    
-    private void initializeComponents(){
+
+    private void initializeComponents() {
         this.initializeInputSearchClientes();
         this.initializeClientTable();
+        this.initializeBillsTable();
+
+        updateClientSelector(false, null);
+
+        setClientSelectActionListener();
     }
-    
-    private void initializeInputSearchClientes(){
+
+    private void initializeInputSearchClientes() {
         InputCliente inputClientes = new InputCliente(this.model, clientsTable);
-        
+
         this.inputSearchClientes = new JLabel();
         this.inputSearchClientes.setBorder(BorderFactory.createLineBorder(Color.black));
         this.inputSearchClientes.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Iconos/Search-24.png")));
         this.inputSearchClientes.setLayout(new BorderLayout());
         this.inputSearchClientes.add(inputClientes);
     }
-    
-    private void initializeClientTable(){
+
+    private void initializeClientTable() {
         ClientManager cm = new ClientManager();
         ArrayList<Client> clientsArray = new ArrayList<Client>();
         clientsArray = cm.findAllClients(model.getConnection(), false);
         DefaultTableModel dtmodel = (DefaultTableModel) this.clientsTable.getModel();
+
         for (Client c : clientsArray) {
             dtmodel.addRow(new Object[]{c.getName(), c.getLastname1() + " " + c.getLastname2(), c.getDni(), c.getPhone()});
         }
     }
-    
-    private void componentsStyles(){
+
+    private void initializeBillsTable() {
+        BillManager bm = new BillManager();
+        ArrayList<Bill> billsArray = bm.findAll(model.getConnection(), false);
+
+        DefaultTableModel dtmodel = (DefaultTableModel) billsTable.getModel();
+        for (Bill b : billsArray) {
+            ArrayList<Input> inputs = b.getInputs();
+            ArrayList<Output> outputs = b.getOutputs();
+            ArrayList<Unsubscribe> unsubscribes = b.getUnsubscribes();
+
+            dtmodel.addRow(new Object[]{b.getId(), inputs.size(), outputs.size(), unsubscribes.size()});
+        }
+
+        billsTable.setVisible(true);
+    }
+
+    private void setClientSelectActionListener() {
+        this.clientSelect.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                clientSelectActionPerformed(evt);
+            }
+        });
+    }
+
+    private void componentsStyles() {
         this.headerStyle();
         this.buttonStyles();
         this.panelStyles();
@@ -131,33 +184,54 @@ public class Principal extends javax.swing.JFrame {
         this.buttonGestionAlbaranes.setBackground(Color.WHITE);
         this.buttonGestionAlbaranes.setFocusPainted(false);
     }
-    
-    private void panelStyles(){
+
+    private void panelStyles() {
         getContentPane().setBackground(Color.WHITE);
-        
+
         this.jTabbedPane1.setBackground(Color.WHITE);
         this.jTabbedPane1.setBorder(BorderFactory.createLineBorder(Color.WHITE));
-        
+
         this.panelAreaClientes.setBackground(Color.WHITE);
         this.panelAreaClientes.setBorder(BorderFactory.createLineBorder(Color.WHITE));
-        
+
         this.panelClientBills.setBackground(Color.WHITE);
         this.panelClientBills.setBorder(BorderFactory.createLineBorder(Color.WHITE));
-        
+
         this.panelBusquedaClientes.setBackground(Color.WHITE);
-        
+
         this.panelResultadoBusquedaClientes.getViewport().setBackground(Color.WHITE);
-        
+
         this.panelAltaClientes.setBackground(Color.WHITE);
         this.panelAltaClientes.setBorder(BorderFactory.createLineBorder(Color.WHITE));
+
+        this.panelAltaAlbaran.setBackground(Color.WHITE);
+        this.panelAltaAlbaran.setBorder(BorderFactory.createLineBorder(Color.WHITE));
     }
-    
-    private void headerStyle(){
+
+    private void headerStyle() {
         Color colorHeader = new Color(40, 96, 144);
         this.header.setBackground(colorHeader);
     }
 
+    private void updateClientSelector(boolean setClient, Client client) {
+        if (setClient) {
+
+        } else {
+            ClientManager cm = new ClientManager();
+            ArrayList<Client> clients = cm.findAllClients(this.model.getConnection(), false);
+            Vector client_model = new Vector();
+            for (Client c : clients) {
+                client_model.addElement(c);
+            }
+
+            this.clientSelect = new JComboBox(client_model);
+            this.clientSelect.setRenderer(new ClientRenderer());
+        }
+    }
+
     private void addComponentTab1() {
+        final Principal that = this;
+
         getContentPane().setBackground(Color.WHITE);
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 
@@ -165,7 +239,8 @@ public class Principal extends javax.swing.JFrame {
         setLayout(null);
 
         JLabel titulo = new JLabel("ALTA DE CLIENTES");
-        titulo.setBounds(110, 7, 150, 30);
+        titulo.setBounds(30, 7, 500, 30);
+        titulo.setFont(new java.awt.Font("DejaVu Sans", 1, 24));
 
         JLabel nombre = new JLabel("Nombre");
         nombre.setBounds(30, 50, 90, 30);
@@ -262,8 +337,7 @@ public class Principal extends javax.swing.JFrame {
                     inputDni.setText("");
                     inputPhone.setText("");
 
-                    int resultado = cm.clientFlush(model.getConnection(), cliente);
-                    System.out.println(resultado);
+                    int resultado = cm.flush(model.getConnection(), cliente);
                     if (resultado == 0) {
                         JOptionPane.showMessageDialog(null, "Se ha producido un error y no se ha dado de alta al cliente", "ERROR", JOptionPane.ERROR_MESSAGE);
                     } else {
@@ -276,6 +350,7 @@ public class Principal extends javax.swing.JFrame {
                             model.addRow(new Object[]{c.getName(), c.getLastname1() + " " + c.getLastname2(), c.getDni(), c.getPhone()});
                         }
                     }
+                    that.updateClientSelector(false, null);
                 } else {
                     JOptionPane.showMessageDialog(null, "Ya existe un usuario con este DNI", "ERROR", JOptionPane.ERROR_MESSAGE);
                 }
@@ -296,6 +371,165 @@ public class Principal extends javax.swing.JFrame {
         panelAltaClientes.add(inputPhone);
 
         panelAltaClientes.add(registerButtonTab1);
+    }
+
+    private void addComponentTab2() {
+        final Principal that = this;
+
+        JLabel title = new JLabel("NUEVO ALBARÁN");
+        title.setBounds(30, 7, 500, 30);
+        title.setFont(new java.awt.Font("DejaVu Sans", 1, 24));
+
+        JLabel client_label = new JLabel("Cliente");
+        client_label.setBounds(30, 50, 150, 30);
+
+        JLabel dni_label = new JLabel("Dni cliente");
+        dni_label.setBounds(30, 85, 150, 30);
+
+        JLabel lot_number = new JLabel("Número de lote");
+        lot_number.setBounds(30, 120, 150, 30);
+
+        JLabel weight = new JLabel("Peso");
+        weight.setBounds(30, 155, 150, 30);
+
+        JLabel price = new JLabel("Precio");
+        price.setBounds(30, 190, 150, 30);
+
+        JLabel t_reception = new JLabel("Tª Recepción");
+        t_reception.setBounds(30, 225, 150, 30);
+
+        JLabel num_hams = new JLabel("Número de jamones");
+        num_hams.setBounds(30, 260, 150, 30);
+
+        JLabel num_palettes = new JLabel("Número de paletas");
+        num_palettes.setBounds(30, 295, 150, 30);
+
+        clientSelect.setBounds(190, 50, 400, 30);
+
+        dni_client = new JTextField();
+        dni_client.setEditable(false);
+        dni_client.setBounds(190, 85, 200, 30);
+
+        inputLotNumber = new JTextField();
+        inputLotNumber.setBounds(190, 120, 200, 30);
+
+        inputWeight = new JTextField();
+        inputWeight.setBounds(190, 155, 200, 30);
+
+        inputPrice = new JTextField();
+        inputPrice.setBounds(190, 190, 200, 30);
+
+        inputTReception = new JTextField();
+        inputTReception.setBounds(190, 225, 200, 30);
+
+        inputNumHams = new JTextField();
+        inputNumHams.setBounds(190, 260, 200, 30);
+
+        inputNumPalettes = new JTextField();
+        inputNumPalettes.setBounds(190, 295, 200, 30);
+
+        // Definiendo los botones
+        registerButtonTab2 = new JButton("Alta");
+        registerButtonTab2.setToolTipText("Dar de alta el albarán");
+        registerButtonTab2.setBackground(new Color(40, 96, 144));
+        registerButtonTab2.setForeground(Color.WHITE);
+        registerButtonTab2.setFocusPainted(false);
+        registerButtonTab2.setBounds(30, 330, 140, 30);
+        registerButtonTab2.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                boolean isValid = true;
+
+                BillManager bm = new BillManager();
+                Bill bill = new Bill();
+                bill.setId(bm.getLastId(model.getConnection()));
+
+                
+                if (client_selected_new_bill != null) {
+                    bill.setClient(client_selected_new_bill);
+                } else {
+                    isValid = false;
+                }
+                
+
+                Input input = new Input();
+                input.setBill(bill);
+
+                if ("".equals(inputLotNumber.getText().trim())) {
+                    isValid = false;
+                } else {
+                    input.setLotNumber(Integer.parseInt(inputLotNumber.getText()));
+                }
+                
+
+                if ("".equals(inputNumHams.getText().trim())) {
+                    isValid = false;
+                } else {
+                    input.setNumHams(Integer.parseInt(inputNumHams.getText()));
+                }
+                
+
+                if ("".equals(inputNumPalettes.getText())) {
+                    isValid = false;
+                } else {
+                    input.setNumPalettes(Integer.parseInt(inputNumPalettes.getText()));
+                }
+                
+
+                if ("".equals(inputPrice.getText().trim())) {
+                    isValid = false;
+                } else {
+                    input.setPrice(Float.parseFloat(inputPrice.getText()));
+                }
+                
+
+                if ("".equals(inputTReception.getText().trim())) {
+                    isValid = false;
+                } else {
+                    input.setTReception(inputTReception.getText());
+                }
+                
+
+                if ("".equals(inputWeight.getText().trim())) {
+                    isValid = false;
+                } else {
+                    input.setWeight(Float.parseFloat(inputWeight.getText()));
+                }
+
+                bill.addInput(input);
+                if (isValid) {
+                    int resultado = bm.flush(model.getConnection(), bill);
+                    if (resultado == 0) {
+                        JOptionPane.showMessageDialog(null, "Se ha producido un error y no se ha dado de insertado el albarán", "ERROR", JOptionPane.ERROR_MESSAGE);
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Albarán creado correctamente");
+                    }
+                } else {
+                    JOptionPane.showMessageDialog(null, "Todos los campos son obligatorios", "ERROR", JOptionPane.ERROR_MESSAGE);
+                }
+            }
+        });
+
+        panelAltaAlbaran.add(title);
+        panelAltaAlbaran.add(client_label);
+        panelAltaAlbaran.add(dni_label);
+        panelAltaAlbaran.add(lot_number);
+        panelAltaAlbaran.add(weight);
+        panelAltaAlbaran.add(price);
+        panelAltaAlbaran.add(t_reception);
+        panelAltaAlbaran.add(num_hams);
+        panelAltaAlbaran.add(num_palettes);
+
+        panelAltaAlbaran.add(clientSelect);
+        panelAltaAlbaran.add(dni_client);
+        panelAltaAlbaran.add(inputLotNumber);
+        panelAltaAlbaran.add(inputWeight);
+        panelAltaAlbaran.add(inputPrice);
+        panelAltaAlbaran.add(inputTReception);
+        panelAltaAlbaran.add(inputNumHams);
+        panelAltaAlbaran.add(inputNumPalettes);
+
+        panelAltaAlbaran.add(registerButtonTab2);
     }
 
     /**
@@ -321,7 +555,10 @@ public class Principal extends javax.swing.JFrame {
         panelBusquedaClientes = new javax.swing.JPanel();
         panelResultadoBusquedaClientes = new javax.swing.JScrollPane();
         panelClientBills = new javax.swing.JPanel();
+        panelResultadosAlbaranes = new javax.swing.JScrollPane();
+        jButtonNewBill = new javax.swing.JButton();
         panelAltaClientes = new javax.swing.JPanel();
+        panelAltaAlbaran = new javax.swing.JPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -427,15 +664,32 @@ public class Principal extends javax.swing.JFrame {
 
         panelBusquedaClientes.setLayout(new java.awt.GridLayout(1, 0));
 
+        jButtonNewBill.setText("Nuevo Albarán");
+        jButtonNewBill.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonNewBillActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout panelClientBillsLayout = new javax.swing.GroupLayout(panelClientBills);
         panelClientBills.setLayout(panelClientBillsLayout);
         panelClientBillsLayout.setHorizontalGroup(
             panelClientBillsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
+            .addGroup(panelClientBillsLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(panelResultadosAlbaranes, javax.swing.GroupLayout.PREFERRED_SIZE, 446, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(jButtonNewBill, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
         );
         panelClientBillsLayout.setVerticalGroup(
             panelClientBillsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 320, Short.MAX_VALUE)
+            .addGroup(panelClientBillsLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(panelClientBillsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jButtonNewBill, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(panelResultadosAlbaranes, javax.swing.GroupLayout.PREFERRED_SIZE, 232, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(0, 0, 0))
         );
 
         javax.swing.GroupLayout panelAreaClientesLayout = new javax.swing.GroupLayout(panelAreaClientes);
@@ -472,6 +726,19 @@ public class Principal extends javax.swing.JFrame {
 
         jTabbedPane1.addTab("tab2", panelAltaClientes);
 
+        javax.swing.GroupLayout panelAltaAlbaranLayout = new javax.swing.GroupLayout(panelAltaAlbaran);
+        panelAltaAlbaran.setLayout(panelAltaAlbaranLayout);
+        panelAltaAlbaranLayout.setHorizontalGroup(
+            panelAltaAlbaranLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 792, Short.MAX_VALUE)
+        );
+        panelAltaAlbaranLayout.setVerticalGroup(
+            panelAltaAlbaranLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 483, Short.MAX_VALUE)
+        );
+
+        jTabbedPane1.addTab("tab3", panelAltaAlbaran);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -493,6 +760,13 @@ public class Principal extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void clientSelectActionPerformed(java.awt.event.ActionEvent evt) {
+        JComboBox comboBox = (JComboBox) evt.getSource();
+        Client client = (Client) comboBox.getSelectedItem();
+        this.client_selected_new_bill = client;
+        this.dni_client.setText(client.getDni());
+    }
 
     private void exitButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exitButtonActionPerformed
         System.exit(0);
@@ -520,20 +794,28 @@ public class Principal extends javax.swing.JFrame {
         jTabbedPane1.setSelectedIndex(0);
     }//GEN-LAST:event_buttonClientsActionPerformed
 
+    private void jButtonNewBillActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonNewBillActionPerformed
+        updateClientSelector(false, null);
+        jTabbedPane1.setSelectedIndex(2);
+    }//GEN-LAST:event_jButtonNewBillActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton buttonAltaClientes;
     private javax.swing.JButton buttonClients;
     private javax.swing.JButton buttonGestionAlbaranes;
     private javax.swing.JButton exitButton;
     private javax.swing.JPanel header;
+    private javax.swing.JButton jButtonNewBill;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JButton minimizeButton;
+    private javax.swing.JPanel panelAltaAlbaran;
     private javax.swing.JPanel panelAltaClientes;
     private javax.swing.JPanel panelAreaClientes;
     private javax.swing.JPanel panelBusquedaClientes;
     private javax.swing.JPanel panelClientBills;
     private javax.swing.JScrollPane panelResultadoBusquedaClientes;
+    private javax.swing.JScrollPane panelResultadosAlbaranes;
     private javax.swing.JLabel title;
     // End of variables declaration//GEN-END:variables
 }

@@ -93,7 +93,6 @@ public class InputCliente extends JTextField {
                     arrayClientes = cm.findClientsBy(m.getConnection(), parametros);
                     for (Client c : arrayClientes) {
                         dtmodel.addRow(new Object[]{c.getName(), c.getLastname1()+ " " + c.getLastname2(), c.getDni(), c.getPhone()});
-                        System.out.println(c.toString());
                     }
                 }
             }
