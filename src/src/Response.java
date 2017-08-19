@@ -10,20 +10,29 @@ package src;
  * @author araluce
  */
 public class Response {
+    private int id;
     private int code;
     private String response;
     
     public Response(){
+        this.id = 0;
         this.code = 0;
         this.response = "";
     }
     
-    public void setCode(int code){
-        this.code = code;
+    public int setId(int id){
+        return this.id = id;
+    }
+    public int setCode(int code){
+        return this.code = code;
     }
     
-    public void setResponse(String response){
-        this.response = response;
+    public String setResponse(String response){
+        return this.response = response;
+    }
+    
+    public int getId(){
+        return this.id;
     }
     
     public int getCode(){

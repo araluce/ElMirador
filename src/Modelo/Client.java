@@ -42,6 +42,7 @@ public class Client {
         this.model = model;
         this.bm = new BillManager(model);
         
+        this.id = 0;
         this.created_at = Calendar.getInstance();
         this.updated_at = Calendar.getInstance();
         this.bills = new ArrayList<Bill>();

@@ -113,7 +113,14 @@ public class InputManager {
      * @return int
      */
     public int flush(Input input) {
+        if(input.getId() == 0)
+            return save(input);
+        return update(input);
+    }
+    
+    public int save(Input input){
         int result = 0;
+        
         try {
             Statement st = conn.createStatement();
             String sql = "INSERT INTO Input ("
@@ -138,9 +145,16 @@ public class InputManager {
         } catch (SQLException ex) {
             Logger.getLogger(Model.class.getName()).log(Level.SEVERE, null, ex);
         }
+        
         return result;
     }
-
+    
+    public int update(Input input){
+        int result = 0;
+        
+        return result;
+    }
+    
     /**
      * Make an Input array with a given resulset
      * @param result
@@ -200,6 +214,27 @@ public class InputManager {
         }
 
         return resp;
+    }
+    
+    /** 
+     * Find the last id in the table
+     *
+     * @return int
+     */
+    public int getLastId() {
+        ResultSet result = null;
+        int last_id = 0;
+        try {
+            Statement st = conn.createStatement();
+            result = st.executeQuery("SELECT MAX(id) as last_id FROM Input");
+            if (result.next()) {
+                last_id = result.getInt("last_id");
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(Model.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        return last_id;
     }
 
 }

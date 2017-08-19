@@ -40,6 +40,7 @@ public class Bill {
         this.om = new OutputManager(model);
         this.um = new UnsubscribeManager(model);
         
+        this.id = 0;
         this.client = null;
         this.delete = false;
         this.inputs = new ArrayList<Input>();

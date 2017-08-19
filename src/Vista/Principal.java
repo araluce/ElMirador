@@ -88,11 +88,8 @@ public class Principal extends javax.swing.JFrame {
         this.billsTable.setVisible(false);
         panelResultadosAlbaranes.getViewport().add(this.billsTable);
         panelBusquedaClientes.add(this.inputSearchClientes);
-
-        BillManager bm = new BillManager(model);
-        ArrayList<Bill> billsArray = bm.findAll(true);
-        System.out.println("Total bills: " + billsArray.size());
-
+        
+        
     }
 
     private void hideTabHeader() {
@@ -142,8 +139,6 @@ public class Principal extends javax.swing.JFrame {
         BillManager bm = new BillManager(model);
         ArrayList<Bill> billsArray = bm.findAll(true);
         
-        System.out.println(billsArray.size() + " bills was founded");
-        
         DefaultTableModel dtmodel = (DefaultTableModel) billsTable.getModel();
         for (Bill b : billsArray) {
             ArrayList<Input> inputs = b.getInputs();
@@ -151,13 +146,6 @@ public class Principal extends javax.swing.JFrame {
             ArrayList<Unsubscribe> unsubscribes = b.getUnsubscribes();
 
             dtmodel.addRow(new Object[]{b.getId(), inputs.size(), outputs.size(), unsubscribes.size()});
-            System.out.println(
-                    "Added to bill table\n"
-                    + "\tid: " + b.getId()
-                    + "\tnum_inputs: " + inputs.size()
-                    + "\tnum_outputs: " + outputs.size()
-                    + "\tnum_unsubscribes: " + unsubscribes.size()
-            );
         }
 
         billsTable.setVisible(true);
@@ -451,16 +439,15 @@ public class Principal extends javax.swing.JFrame {
 
                 BillManager bm = new BillManager(model);
                 Bill bill = new Bill(model);
-                bill.setId(bm.getLastId());
-
+                
                 if (client_selected_new_bill != null) {
                     bill.setClient(client_selected_new_bill);
                 } else {
                     isValid = false;
                 }
-
+                
+                InputManager im = new InputManager(model);
                 Input input = new Input(model);
-                input.setBill(bill);
 
                 if ("".equals(inputLotNumber.getText().trim())) {
                     isValid = false;
@@ -497,14 +484,21 @@ public class Principal extends javax.swing.JFrame {
                 } else {
                     input.setWeight(Float.parseFloat(inputWeight.getText()));
                 }
-
-                bill.addInput(input);
+                
                 if (isValid) {
                     int resultado = bm.flush(bill);
-                    if (resultado == 0) {
+                    if (resultado == 0) 
                         JOptionPane.showMessageDialog(null, "Se ha producido un error y no se ha dado de insertado el albarán", "ERROR", JOptionPane.ERROR_MESSAGE);
-                    } else {
-                        JOptionPane.showMessageDialog(null, "Albarán creado correctamente");
+                    else {
+                        System.out.println("bill_id: " + bill.getId());
+                        bill.setId(bm.getLastId());
+                        System.out.println("Input bill_id: " + bill.getId());
+                        input.setBill(bill);
+                        int resulInput = im.flush(input);
+                        
+                        if(resulInput != 0){
+                            JOptionPane.showMessageDialog(null, "Albarán creado correctamente");
+                        }                            
                     }
                 } else {
                     JOptionPane.showMessageDialog(null, "Todos los campos son obligatorios", "ERROR", JOptionPane.ERROR_MESSAGE);

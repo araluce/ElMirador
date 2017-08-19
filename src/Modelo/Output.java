@@ -38,6 +38,7 @@ public class Output {
         this.bm = new BillManager(model);
         this.cm = new ClientManager(model);
         
+        this.id = 0;
         this.bill = null;
         this.client = null;
         this.date_output = Calendar.getInstance();

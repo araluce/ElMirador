@@ -222,6 +222,12 @@ public class ClientManager {
      * @return int
      */
     public int flush(Client client) {
+        if(client.getId() == 0)
+            return save(client);
+        return update(client);
+    }
+    
+    public int save(Client client){
         int result = 0;
         try {
             Statement st = conn.createStatement();
@@ -241,6 +247,12 @@ public class ClientManager {
         } catch (SQLException ex) {
             Logger.getLogger(Model.class.getName()).log(Level.SEVERE, null, ex);
         }
+        return result;
+    }
+    
+    public int update(Client client){
+        int result = 0;
+        
         return result;
     }
 
@@ -539,6 +551,27 @@ public class ClientManager {
         }
 
         return resp;
+    }
+    
+    /**
+     * Find the last id in the table
+     *
+     * @return int
+     */
+    public int getLastId() {
+        ResultSet result = null;
+        int last_id = 0;
+        try {
+            Statement st = conn.createStatement();
+            result = st.executeQuery("SELECT MAX(id) as last_id FROM Client");
+            if (result.next()) {
+                last_id = result.getInt("last_id");
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(Model.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        return last_id;
     }
 
 }

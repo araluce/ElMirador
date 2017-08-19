@@ -33,6 +33,7 @@ public class Unsubscribe {
         this.model = model;
         this.bm = new BillManager(model);
         
+        this.id = 0;
         this.bill = null;
         this.date_unsubscribe = Calendar.getInstance();
         this.num_hams_unsubscribes = 0;

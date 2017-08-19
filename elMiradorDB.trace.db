@@ -332,3 +332,15 @@ INSERT INTO Input (bill_id, date_input, lot_number, weight, price, t_reception, 
 	at java.awt.EventDispatchThread.pumpEvents(EventDispatchThread.java:101)
 	at java.awt.EventDispatchThread.pumpEvents(EventDispatchThread.java:93)
 	at java.awt.EventDispatchThread.run(EventDispatchThread.java:82)
+2017-08-19 17:51:04 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLException: Tabla "CLIENT" no encontrada
+Table "CLIENT" not found; SQL statement:
+SELECT * FROM Client WHERE delete = false; [42102-193]
+2017-08-19 17:51:04 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLException: Tabla "BILL" no encontrada
+Table "BILL" not found; SQL statement:
+SELECT * FROM Bill; [42102-193]
+2017-08-19 17:51:04 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLException: Tabla "CLIENT" no encontrada
+Table "CLIENT" not found; SQL statement:
+SELECT * FROM Client WHERE delete = false; [42102-193]

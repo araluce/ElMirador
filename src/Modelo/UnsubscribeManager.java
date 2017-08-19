@@ -107,6 +107,12 @@ public class UnsubscribeManager {
      * @return int
      */
     public int flush(Unsubscribe unsubscribe) {
+        if(unsubscribe.getId() == 0)
+            return save(unsubscribe);
+        return update(unsubscribe);
+    }
+    
+    public int save(Unsubscribe unsubscribe){
         int result = 0;
         try {
             Statement st = conn.createStatement();
@@ -129,6 +135,12 @@ public class UnsubscribeManager {
         } catch (SQLException ex) {
             Logger.getLogger(Model.class.getName()).log(Level.SEVERE, null, ex);
         }
+        return result;
+    }
+    
+    public int update(Unsubscribe unsubscribe){
+        int result = 0;
+        
         return result;
     }
 
@@ -179,6 +191,27 @@ public class UnsubscribeManager {
         }
 
         return resp;
+    }
+    
+    /** 
+     * Find the last id in the table
+     *
+     * @return int
+     */
+    public int getLastId() {
+        ResultSet result = null;
+        int last_id = 0;
+        try {
+            Statement st = conn.createStatement();
+            result = st.executeQuery("SELECT MAX(id) as last_id FROM Unsubscribe");
+            if (result.next()) {
+                last_id = result.getInt("last_id");
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(Model.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        return last_id;
     }
 
 }

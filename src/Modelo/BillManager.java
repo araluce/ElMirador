@@ -254,6 +254,12 @@ public class BillManager {
      * @return int
      */
     public int flush(Bill bill) {
+        if (bill.getId() == 0)
+            return save(bill);
+        return update(bill);
+    }
+    
+    public int save(Bill bill){
         int result = 0;
         try {
             Statement st = conn.createStatement();
@@ -270,6 +276,12 @@ public class BillManager {
         } catch (SQLException ex) {
             Logger.getLogger(Model.class.getName()).log(Level.SEVERE, null, ex);
         }
+        return result;
+    }
+    
+    public int update(Bill bill){
+        int result = 0;
+        
         return result;
     }
 

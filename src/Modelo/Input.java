@@ -37,6 +37,7 @@ public class Input {
         this.model = model;
         this.bm = new BillManager(model);
         
+        this.id = 0;
         this.bill = null;
         this.date_input = Calendar.getInstance();
         this.lot_number = 0;
