@@ -55,8 +55,8 @@ public class EditClientDirectory extends javax.swing.JFrame {
         
         getContentPane().setBackground(Color.WHITE);
         
-        ClientManager cm = new ClientManager();
-        Client client = cm.findOneClientByDni(model.getConnection(), dni);
+        ClientManager cm = new ClientManager(model);
+        Client client = cm.findOneClientByDni(dni);
         
         setTitle("Directorio de " + this.dni);
         setDefaultCloseOperation(this.close());
@@ -131,12 +131,12 @@ public class EditClientDirectory extends javax.swing.JFrame {
         registerButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                ClientManager cm = new ClientManager();
+                ClientManager cm = new ClientManager(model);
                 ArrayList<Client> clientList = new ArrayList<Client>();
-                clientList = cm.findClientsByDni(model.getConnection(), inputDni.getText());
+                clientList = cm.findClientsByDni(inputDni.getText());
                 if (clientList.isEmpty()) {
                     // Creamos al nuevo cliente
-                    Client client = new Client();
+                    Client client = new Client(model);
                     client.setName(inputName.getText().toUpperCase());
                     client.setLastname1(inputLastname1.getText().toUpperCase());
                     client.setLastname2(inputLastname2.getText().toUpperCase());
@@ -150,13 +150,13 @@ public class EditClientDirectory extends javax.swing.JFrame {
                     inputDni.setText("");
                     inputPhone.setText("");
 
-                    int result = cm.flush(model.getConnection(), client);
+                    int result = cm.flush(client);
                     if (result == 0) {
                         JOptionPane.showMessageDialog(thisForm, "Se ha prodicido un error y no se ha dado de alta al cliente", "ERROR", JOptionPane.ERROR_MESSAGE);
                     } else {
                         JOptionPane.showMessageDialog(thisForm, "Cliente dado de alta correctamente");
                         ArrayList<Client> arrayClientes = new ArrayList<Client>();
-                        arrayClientes = cm.findAllClients(model.getConnection(), true);
+                        arrayClientes = cm.findAllClients(true);
                         DefaultTableModel model = (DefaultTableModel) clientSearchTable.getModel();
                         model.setRowCount(0);
                         for (Client c : arrayClientes) {

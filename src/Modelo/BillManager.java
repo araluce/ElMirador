@@ -25,50 +25,35 @@ import src.Response;
  * @author araluce
  */
 public class BillManager {
-    
-    SimpleDateFormat sdf = new SimpleDateFormat("dd MMM yyyy HH:mm:ss", Locale.GERMANY);
+
+    private Model model;
+    private Connection conn;
+    private SimpleDateFormat sdf;
 
     /**
      * Constructor de BillManager
      */
-    public BillManager() {}
-    
-    /* Encuentra un cliente por dni
+    public BillManager(Model model) {
+        this.model = model;
+        this.conn = model.getConnection();
+        this.sdf = new SimpleDateFormat("dd MMM yyyy HH:mm:ss", Locale.GERMANY);
+    }
+
+    /* Find bill by id
      *
-     * @param dni 8 caracteres y 1 letra que identifican a un cliente
-     * @return Client|null
+     * @param id
+     * @return Bill|null
      */
-    public Bill find(Connection conn, int id) {
+    public Bill find(int id) {
         ResultSet result = null;
         try {
             Statement st = conn.createStatement();
             result = st.executeQuery("SELECT * FROM Bill WHERE id LIKE '" + id + "';");
             if (result.next()) {
-                Bill bill = new Bill();
+                Bill bill = new Bill(model);
                 bill.setId(result.getInt("id"));
-                
-                // Find Client
-                ClientManager cm = new ClientManager();
-                Client client = cm.find(conn, result.getInt("client_id"));
-                bill.setClient(client);
-                
-                // Find Inputs
-                InputManager im = new InputManager();
-                ArrayList<Input> inputs = im.findByBill(conn, bill);
-                bill.addInputs(inputs);
-                
-                // Find Outputs
-                OutputManager om = new OutputManager();
-                ArrayList<Output> outputs = om.findByBill(conn, bill);
-                bill.addOutputs(outputs);
-                
-                // Find Unsubscribes
-                UnsubscribeManager um = new UnsubscribeManager();
-                ArrayList<Unsubscribe> unsubscribes = um.findByBill(conn, bill);
-                bill.addUnsubscribes(unsubscribes);
-                
                 bill.setDelete(result.getBoolean("delete"));
-                
+
                 Calendar date = Calendar.getInstance();
                 try {
                     date.setTime(sdf.parse(result.getString("created_at")));
@@ -78,7 +63,7 @@ public class BillManager {
                 } catch (ParseException ex) {
                     Logger.getLogger(ClientManager.class.getName()).log(Level.SEVERE, null, ex);
                 }
-                
+
                 return bill;
             }
         } catch (SQLException ex) {
@@ -88,7 +73,13 @@ public class BillManager {
         return null;
     }
     
-    public ArrayList<Bill> findByClient(Connection conn, Client client, boolean all) {
+    /**
+     * Find bill by Client
+     * @param client
+     * @param all
+     * @return 
+     */
+    public ArrayList<Bill> findByClient(Client client, boolean all) {
         ArrayList<Bill> billList = new ArrayList<Bill>();
         ResultSet result = null;
         try {
@@ -98,9 +89,9 @@ public class BillManager {
             } else {
                 result = st.executeQuery("SELECT * FROM Bill WHERE client_id LIKE '" + client.getId() + "' AND delete != false;");
             }
-            
-            billList = resultSetToArray(conn, result);
-            
+
+            billList = resultSetToArray(result);
+
         } catch (SQLException ex) {
             Logger.getLogger(Model.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -109,13 +100,78 @@ public class BillManager {
     }
     
     /**
+     * Find one bill by input
+     * @param input
+     * @return 
+     */
+    public Bill findOneByInput(Input input) {
+        Bill bill = new Bill(model);
+        ResultSet result = null;
+        try {
+            Statement st = conn.createStatement();
+            result = st.executeQuery("SELECT bill_id FROM Input WHERE id = " + input.getId() + ";");
+            if (result.next()) {
+                bill = find(result.getInt("bill_id"));
+            }
+
+        } catch (SQLException ex) {
+            Logger.getLogger(Model.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        return bill;
+    }
+    
+    /**
+     * Find one bill by output
+     * @param output
+     * @return 
+     */
+    public Bill findOneByOutput(Output output) {
+        Bill bill = new Bill(model);
+        ResultSet result = null;
+        try {
+            Statement st = conn.createStatement();
+            result = st.executeQuery("SELECT bill_id FROM Output WHERE id = " + output.getId() + ";");
+            if (result.next()) {
+                bill = find(result.getInt("bill_id"));
+            }
+
+        } catch (SQLException ex) {
+            Logger.getLogger(Model.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        return bill;
+    }
+    
+    /**
+     * Find one bill by unsubscribe
+     * @param unsubscribe
+     * @return 
+     */
+    public Bill findOneByUnsubscribe(Unsubscribe unsubscribe) {
+        Bill bill = new Bill(model);
+        ResultSet result = null;
+        try {
+            Statement st = conn.createStatement();
+            result = st.executeQuery("SELECT bill_id FROM Unsubscribe WHERE id = " + unsubscribe.getId() + ";");
+            if (result.next()) {
+                bill = find(result.getInt("bill_id"));
+            }
+
+        } catch (SQLException ex) {
+            Logger.getLogger(Model.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        return bill;
+    }
+
+    /**
      * Find all bills
      *
-     * @param conn
      * @param all
      * @return ArrayList<Bill>|null
      */
-    public ArrayList<Bill> findAll(Connection conn, boolean all) {
+    public ArrayList<Bill> findAll(boolean all) {
         ArrayList<Bill> billList = new ArrayList<Bill>();
         ResultSet result = null;
         try {
@@ -125,42 +181,31 @@ public class BillManager {
             } else {
                 result = st.executeQuery("SELECT * FROM Bill WHERE delete != false;");
             }
-            billList = resultSetToArray(conn, result);
+            billList = resultSetToArray(result);
         } catch (SQLException ex) {
             Logger.getLogger(Model.class.getName()).log(Level.SEVERE, null, ex);
         }
 
         return billList;
     }
-    
-    private ArrayList<Bill> resultSetToArray(Connection conn, ResultSet result) {
+
+    /**
+     * Make a Bill array with a given resulset
+     * @param result
+     * @return 
+     */
+    private ArrayList<Bill> resultSetToArray(ResultSet result) {
         ArrayList<Bill> billList = new ArrayList<Bill>();
         try {
             while (result.next()) {
-                Bill bill = new Bill();
+                Bill bill = new Bill(model);
                 bill.setId(result.getInt("id"));
-                
-                ClientManager cm = new ClientManager();
-                Client client = cm.find(conn, result.getInt("client_id"));
+
+                ClientManager cm = new ClientManager(model);
+                Client client = cm.find(result.getInt("client_id"));
                 bill.setClient(client);
-                
-                // Find Inputs
-                InputManager im = new InputManager();
-                ArrayList<Input> inputs = im.findByBill(conn, bill);
-                bill.addInputs(inputs);
-                
-                // Find Outputs
-                OutputManager om = new OutputManager();
-                ArrayList<Output> outputs = om.findByBill(conn, bill);
-                bill.addOutputs(outputs);
-                
-                // Find Unsubscribes
-                UnsubscribeManager um = new UnsubscribeManager();
-                ArrayList<Unsubscribe> unsubscribes = um.findByBill(conn, bill);
-                bill.addUnsubscribes(unsubscribes);
-                
                 bill.setDelete(result.getBoolean("delete"));
-                
+
                 Calendar date = Calendar.getInstance();
                 try {
                     date.setTime(sdf.parse(result.getString("created_at")));
@@ -170,7 +215,7 @@ public class BillManager {
                 } catch (ParseException ex) {
                     Logger.getLogger(ClientManager.class.getName()).log(Level.SEVERE, null, ex);
                 }
-                
+
                 billList.add(bill);
             }
         } catch (SQLException ex) {
@@ -178,8 +223,13 @@ public class BillManager {
         }
         return billList;
     }
-    
-    public Response remove(Bill bill, Connection conn) {
+
+    /**
+     * Check a given bill as removed
+     * @param bill
+     * @return 
+     */
+    public Response remove(Bill bill) {
         Response resp = new Response();
         resp.setCode(0);
 
@@ -196,15 +246,14 @@ public class BillManager {
 
         return resp;
     }
-    
+
     /**
-     * Insert a new bill into a bill table
+     * Insert a new bill into a Bill DB table
      *
-     * @param conn
      * @param bill
      * @return int
      */
-    public int flush(Connection conn, Bill bill) {
+    public int flush(Bill bill) {
         int result = 0;
         try {
             Statement st = conn.createStatement();
@@ -214,34 +263,22 @@ public class BillManager {
                     + "VALUES ("
                     + "" + bill.getClient().getId()
                     + ", " + bill.getDelete()
-                    + ", '" + sdf.format((Date) bill.getCreatedAt().getTime()) 
+                    + ", '" + sdf.format((Date) bill.getCreatedAt().getTime())
                     + "', '" + sdf.format((Date) bill.getUpdatedAt().getTime())
                     + "');";
             result = st.executeUpdate(sql);
-            
-            InputManager im = new InputManager();
-            for(Input input: bill.getInputs())
-                im.flush(conn, input);
-            
-            OutputManager om = new OutputManager();
-            for(Output output: bill.getOutputs())
-                om.flush(conn, output);
-            
-            UnsubscribeManager um = new UnsubscribeManager();
-            for(Unsubscribe unsubscribe: bill.getUnsubscribes())
-                um.flush(conn, unsubscribe);
         } catch (SQLException ex) {
             Logger.getLogger(Model.class.getName()).log(Level.SEVERE, null, ex);
         }
         return result;
     }
-    
-    /* Find the last id in the table
+
+    /** 
+     * Find the last id in the table
      *
-     * @param conn
      * @return int
      */
-    public int getLastId(Connection conn) {
+    public int getLastId() {
         ResultSet result = null;
         int last_id = 0;
         try {

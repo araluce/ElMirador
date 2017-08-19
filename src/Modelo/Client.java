@@ -16,6 +16,9 @@ import java.util.Locale;
  */
 public class Client {
     
+    private Model model;
+    private BillManager bm;
+    
     private int id;
     private String name;
     private String lastname1;
@@ -32,13 +35,17 @@ public class Client {
 
     /**
      * Client Constructor
+     * 
+     * @param model
      */
-    public Client() {
-        this.delete = false;
+    public Client(Model model) {
+        this.model = model;
+        this.bm = new BillManager(model);
         
         this.created_at = Calendar.getInstance();
         this.updated_at = Calendar.getInstance();
         this.bills = new ArrayList<Bill>();
+        this.delete = false;
     }
     
     /**
@@ -128,6 +135,9 @@ public class Client {
      * @return ArrayList<Bills>
      */
     public ArrayList<Bill> getBills() {
+        ArrayList<Bill> remoteBills = bm.findByClient(this, false);
+        if(this.bills.size() != remoteBills.size())
+            this.bills = remoteBills;
         return this.bills;
     }
     
@@ -254,5 +264,9 @@ public class Client {
                 + "Creado el: " + sdf.format((Date) this.created_at.getTime()) + "\n"
                 + "Actualizado el: " + sdf.format((Date) this.updated_at.getTime()) + "\n"
                 + "Borrado: " + this.delete;
+    }
+    
+    public boolean equalBills(ArrayList<Bill> bills){
+        return false;
     }
 }

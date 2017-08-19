@@ -44,8 +44,8 @@ public class ClientDirectory extends javax.swing.JFrame {
 
         getContentPane().setBackground(Color.WHITE);
 
-        final ClientManager cm = new ClientManager();
-        final Client client = cm.findOneClientByDni(model.getConnection(), dni);
+        final ClientManager cm = new ClientManager(model);
+        final Client client = cm.findOneClientByDni(dni);
 
         setTitle("Directorio de " + this.dni);
         setDefaultCloseOperation(cerrarVentana());
@@ -97,7 +97,7 @@ public class ClientDirectory extends javax.swing.JFrame {
             public void actionPerformed(ActionEvent e) {
                 if (JOptionPane.showConfirmDialog(null, "¿Está seguro de que desea eliminar este cliente?", "WARNING",
                         JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
-                    Response response = cm.removeClient(client, optionModel.getConnection());
+                    Response response = cm.removeClient(client);
                     JOptionPane.showMessageDialog(thisForm, response.getResponse());
                 }
             }

@@ -147,12 +147,12 @@ public class ClientRegister extends javax.swing.JFrame {
         registerButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                ClientManager cm = new ClientManager();
+                ClientManager cm = new ClientManager(model);
                 ArrayList<Client> clientList = new ArrayList<Client>();
-                clientList = cm.findClientsByDni(model.getConnection(), inputDni.getText());
+                clientList = cm.findClientsByDni(inputDni.getText());
                 if (clientList.isEmpty()) {
                     // Creamos al nuevo cliente
-                    Client cliente = new Client();
+                    Client cliente = new Client(model);
                     cliente.setName(inputName.getText().toUpperCase());
                     cliente.setLastname1(inputLastname1.getText().toUpperCase());
                     cliente.setLastname2(inputLastname2.getText().toUpperCase());
@@ -166,13 +166,13 @@ public class ClientRegister extends javax.swing.JFrame {
                     inputDni.setText("");
                     inputPhone.setText("");
 
-                    int resultado = cm.flush(model.getConnection(), cliente);
+                    int resultado = cm.flush(cliente);
                     if (resultado == 0) {
                         JOptionPane.showMessageDialog(thisForm, "Se ha prodicido un error y no se ha dado de alta al cliente", "ERROR", JOptionPane.ERROR_MESSAGE);
                     } else {
                         JOptionPane.showMessageDialog(thisForm, "Cliente dado de alta correctamente");
                         ArrayList<Client> arrayClientes = new ArrayList<Client>();
-                        arrayClientes = cm.findAllClients(model.getConnection(), true);
+                        arrayClientes = cm.findAllClients(true);
                         DefaultTableModel model = (DefaultTableModel) clientSearchTable.getModel();
                         model.setRowCount(0);
                         for (Client c : arrayClientes) {

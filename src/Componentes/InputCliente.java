@@ -69,18 +69,19 @@ public class InputCliente extends JTextField {
             }
 
             public void keyTyped(KeyEvent keyEvent) {
-                String busqueda = getText().toUpperCase();
-                if (busqueda.trim().equals("")) {
-                    ClientManager cm = new ClientManager();
-                    ArrayList<Client> arrayClientes = new ArrayList<Client>();
-                    arrayClientes = cm.findAllClients(m.getConnection(), true);
-                    DefaultTableModel dtmodel = (DefaultTableModel) clientsTable.getModel();
+                DefaultTableModel dtmodel = (DefaultTableModel) clientsTable.getModel();
                     dtmodel.setRowCount(0);
+                    
+                String busqueda = getText().toUpperCase();
+                ClientManager cm = new ClientManager(m);
+                if (busqueda.trim().equals("")) {
+                    ArrayList<Client> arrayClientes = new ArrayList<Client>();
+                    arrayClientes = cm.findAllClients(true);
+                    
                     for (Client c : arrayClientes) {
                         dtmodel.addRow(new Object[]{c.getName(), c.getLastname1()+ " " + c.getLastname2(), c.getDni(), c.getPhone()});
                     }
                 } else {
-                    ClientManager cm = new ClientManager();
                     ArrayList<Client> arrayClientes = new ArrayList<Client>();
                     Hashtable<String, String> parametros = new Hashtable<String, String>();
                     parametros.put("name", busqueda);
@@ -88,9 +89,8 @@ public class InputCliente extends JTextField {
                     parametros.put("lastname2", busqueda);
                     parametros.put("dni", busqueda);
                     parametros.put("phone", busqueda);
-                    DefaultTableModel dtmodel = (DefaultTableModel) clientsTable.getModel();
-                    dtmodel.setRowCount(0);
-                    arrayClientes = cm.findClientsBy(m.getConnection(), parametros);
+                    
+                    arrayClientes = cm.findClientsBy(parametros);
                     for (Client c : arrayClientes) {
                         dtmodel.addRow(new Object[]{c.getName(), c.getLastname1()+ " " + c.getLastname2(), c.getDni(), c.getPhone()});
                     }

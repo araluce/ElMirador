@@ -15,6 +15,9 @@ import java.util.Calendar;
  */
 public class Unsubscribe {
     
+    private Model model;
+    private BillManager bm;
+    
     private int id;
     private Bill bill;
     private Calendar date_unsubscribe;
@@ -26,7 +29,10 @@ public class Unsubscribe {
     private Calendar created_at;
     private Calendar updated_at;
     
-    public Unsubscribe(){
+    public Unsubscribe(Model model){
+        this.model = model;
+        this.bm = new BillManager(model);
+        
         this.bill = null;
         this.date_unsubscribe = Calendar.getInstance();
         this.num_hams_unsubscribes = 0;
@@ -41,6 +47,8 @@ public class Unsubscribe {
     }
     
     public Bill getBill(){
+        if(this.bill == null)
+            this.bill = bm.findOneByUnsubscribe(this);
         return this.bill;
     }
     

@@ -25,27 +25,32 @@ import src.Response;
  * @author araluce
  */
 public class ClientManager {
+    
+    private SimpleDateFormat sdf;
+    private Model model;
+    private Connection conn;
 
     /**
      * Constructor de ClienteManager
      */
-    public ClientManager() {
+    public ClientManager(Model model) {
+        this.model = model;
+        this.conn = model.getConnection();
+        this.sdf = new SimpleDateFormat("dd MMM yyyy HH:mm:ss", Locale.GERMANY);
     }
-
-    SimpleDateFormat sdf = new SimpleDateFormat("dd MMM yyyy HH:mm:ss", Locale.GERMANY);
 
     /* Encuentra un cliente por dni
      *
-     * @param dni 8 caracteres y 1 letra que identifican a un cliente
+     * @param id
      * @return Client|null
      */
-    public Client find(Connection conn, int id) {
+    public Client find(int id) {
         ResultSet result = null;
         try {
             Statement st = conn.createStatement();
             result = st.executeQuery("SELECT * FROM Client WHERE id LIKE '" + id + "';");
             if (result.next()) {
-                Client client = new Client();
+                Client client = new Client(model);
                 client.setId(result.getInt("id"));
                 client.setName(result.getString("name"));
                 client.setLastname1(result.getString("lastname1"));
@@ -72,18 +77,18 @@ public class ClientManager {
     }
 
     /**
-     * Encuentra un cliente por dni
+     * Find client by dni
      *
-     * @param dni 8 caracteres y 1 letra que identifican a un cliente
+     * @param dni
      * @return Client|null
      */
-    public Client findOneClientByDni(Connection conn, String dni) {
+    public Client findOneClientByDni(String dni) {
         ResultSet result = null;
         try {
             Statement st = conn.createStatement();
             result = st.executeQuery("SELECT * FROM Client WHERE dni LIKE '" + dni + "';");
             if (result.next()) {
-                Client client = new Client();
+                Client client = new Client(model);
                 client.setId(result.getInt("id"));
                 client.setName(result.getString("name"));
                 client.setLastname1(result.getString("lastname1"));
@@ -110,18 +115,18 @@ public class ClientManager {
     }
 
     /**
-     * Encuentra un cliente por telefono
+     * Find client by phone number
      *
-     * @param phone 9 enteros
+     * @param phone 9 int
      * @return Client|null
      */
-    public Client findOneClientByPhone(Connection conn, int phone) {
+    public Client findOneClientByPhone(int phone) {
         ResultSet result = null;
         try {
             Statement st = conn.createStatement();
             result = st.executeQuery("SELECT * FROM Client WHERE phone='" + phone + "';");
             if (result.next()) {
-                Client client = new Client();
+                Client client = new Client(model);
                 client.setId(result.getInt("id"));
                 client.setName(result.getString("name"));
                 client.setLastname1(result.getString("lastname1"));
@@ -147,14 +152,36 @@ public class ClientManager {
 
         return null;
     }
+    
+    /**
+     * Find one client by output
+     * @param output
+     * @return 
+     */
+    public Client findOneByOutput(Output output) {
+        Client client = new Client(model);
+        ResultSet result = null;
+        try {
+            Statement st = conn.createStatement();
+            result = st.executeQuery("SELECT client_id FROM Output WHERE id = " + output.getId() + ";");
+            if (result.next()) {
+                client = find(result.getInt("client_id"));
+            }
+
+        } catch (SQLException ex) {
+            Logger.getLogger(Model.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        return client;
+    }
 
     /**
-     * Encuentra a los clientes que coincidan con el dni dado
+     * Find all clients by dni
      *
      * @param dni
      * @return ArrayList<Client>|null
      */
-    public ArrayList<Client> findClientsByDni(Connection conn, String dni) {
+    public ArrayList<Client> findClientsByDni(String dni) {
         ArrayList<Client> clientList = new ArrayList<Client>();
         ResultSet result = null;
         try {
@@ -169,12 +196,12 @@ public class ClientManager {
     }
 
     /**
-     * Encuentra a los clientes que coincidan con el telefono dado
+     * Find all clients by phone number
      *
      * @param phone
      * @return ArrayList<Client>|null
      */
-    public ArrayList<Client> findClientsByPhone(Connection conn, String phone) {
+    public ArrayList<Client> findClientsByPhone(String phone) {
         ArrayList<Client> clientList = new ArrayList<Client>();
         ResultSet result = null;
         try {
@@ -189,13 +216,12 @@ public class ClientManager {
     }
 
     /**
-     * Inserta un nuevo cliente en la tabla Client
+     * Insert a new client into Client DB table
      *
-     * @param conn
      * @param client
      * @return int
      */
-    public int flush(Connection conn, Client client) {
+    public int flush(Client client) {
         int result = 0;
         try {
             Statement st = conn.createStatement();
@@ -219,12 +245,12 @@ public class ClientManager {
     }
 
     /**
-     * Encuentra a los clientes que coincidan con el nombre dado
+     * Find all clients by name
      *
      * @param name
      * @return ArrayList<Client>|null
      */
-    public ArrayList<Client> findClientsByName(Connection conn, String name) {
+    public ArrayList<Client> findClientsByName(String name) {
         ArrayList<Client> clientList = new ArrayList<Client>();
         ResultSet result = null;
         try {
@@ -239,12 +265,12 @@ public class ClientManager {
     }
 
     /**
-     * Encuentra a los clientes que coincidan con el primer apellido dado
+     * Find all clients by the first lastname
      *
      * @param lastname1
      * @return ArrayList<Client>|null
      */
-    public ArrayList<Client> findClientsByLastname1(Connection conn, String lastname1) {
+    public ArrayList<Client> findClientsByLastname1(String lastname1) {
         ArrayList<Client> clientList = new ArrayList<Client>();
         ResultSet result = null;
         try {
@@ -259,12 +285,12 @@ public class ClientManager {
     }
 
     /**
-     * Encuentra a los clientes que coincidan con el segundo apellido dado
+     * Find all clients by the second lastname
      *
      * @param lastname2
      * @return ArrayList<Client>|null
      */
-    public ArrayList<Client> findClientsByLastName2(Connection conn, String lastname2) {
+    public ArrayList<Client> findClientsByLastName2(String lastname2) {
         ArrayList<Client> clientList = new ArrayList<Client>();
         ResultSet result = null;
         try {
@@ -279,13 +305,12 @@ public class ClientManager {
     }
 
     /**
-     * Encuentra a todos los clientes
+     * Find all clients
      *
-     * @param conn
      * @param all
      * @return ArrayList<Client>|null
      */
-    public ArrayList<Client> findAllClients(Connection conn, boolean all) {
+    public ArrayList<Client> findAllClients(boolean all) {
         ArrayList<Client> clientList = new ArrayList<Client>();
         try {
             ResultSet result = null;
@@ -304,12 +329,13 @@ public class ClientManager {
     }
 
     /**
+     * Find all clients by hashtable parameters
      * Encuentra a los clientes que coincidan con los parametros dados
      *
      * @param parameters
      * @return ArrayList<Client>|null
      */
-    public ArrayList<Client> findClientsBy(Connection conn, Hashtable<String, String> parameters) {
+    public ArrayList<Client> findClientsBy(Hashtable<String, String> parameters) {
         ArrayList<Client> clientList = new ArrayList<Client>();
         ArrayList<String> dniList = new ArrayList<String>();
         ResultSet result = null;
@@ -334,7 +360,7 @@ public class ClientManager {
             if (isSetName) {
                 result = st.executeQuery("SELECT * FROM Client WHERE name LIKE '%" + parameters.get("name") + "%';");
                 while (result.next()) {
-                    Client client = new Client();
+                    Client client = new Client(model);
                     client.setId(result.getInt("id"));
                     client.setName(result.getString("name"));
                     client.setLastname1(result.getString("lastname1"));
@@ -360,7 +386,7 @@ public class ClientManager {
             if (isSetLastname1) {
                 result = st.executeQuery("SELECT * FROM Client WHERE lastname1 LIKE '%" + parameters.get("lastname1") + "%';");
                 while (result.next()) {
-                    Client client = new Client();
+                    Client client = new Client(model);
                     client.setId(result.getInt("id"));
                     client.setName(result.getString("name"));
                     client.setLastname1(result.getString("lastname1"));
@@ -386,7 +412,7 @@ public class ClientManager {
             if (isSetLastname2) {
                 result = st.executeQuery("SELECT * FROM Client WHERE lastname2 LIKE '%" + parameters.get("lastname2") + "%';");
                 while (result.next()) {
-                    Client client = new Client();
+                    Client client = new Client(model);
                     client.setId(result.getInt("id"));
                     client.setName(result.getString("name"));
                     client.setLastname1(result.getString("lastname1"));
@@ -412,7 +438,7 @@ public class ClientManager {
             if (isSetDni) {
                 result = st.executeQuery("SELECT * FROM Client WHERE dni LIKE '%" + parameters.get("dni") + "%';");
                 while (result.next()) {
-                    Client client = new Client();
+                    Client client = new Client(model);
                     client.setId(result.getInt("id"));
                     client.setName(result.getString("name"));
                     client.setLastname1(result.getString("lastname1"));
@@ -438,7 +464,7 @@ public class ClientManager {
             if (isSetPhone) {
                 result = st.executeQuery("SELECT * FROM Client WHERE phone LIKE '%" + parameters.get("phone") + "%';");
                 while (result.next()) {
-                    Client client = new Client();
+                    Client client = new Client(model);
                     client.setId(result.getInt("id"));
                     client.setName(result.getString("name"));
                     client.setLastname1(result.getString("lastname1"));
@@ -472,7 +498,7 @@ public class ClientManager {
         ArrayList<Client> clientList = new ArrayList<Client>();
         try {
             while (result.next()) {
-                Client client = new Client();
+                Client client = new Client(model);
                 client.setId(result.getInt("id"));
                 client.setName(result.getString("name"));
                 client.setLastname1(result.getString("lastname1"));
@@ -497,7 +523,7 @@ public class ClientManager {
         return clientList;
     }
 
-    public Response removeClient(Client client, Connection conn) {
+    public Response removeClient(Client client) {
         Response resp = new Response();
         resp.setCode(0);
 

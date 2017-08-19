@@ -72,15 +72,17 @@ public class ClientsTable extends JTable {
             @Override
             public void valueChanged(ListSelectionEvent event) {
                 if (event.getValueIsAdjusting()) {
+                    DefaultTableModel dtmodel = (DefaultTableModel) bt.getModel();
+                    dtmodel.setRowCount(0);
+                    
                     String dni = table.getValueAt(table.getSelectedRow(), 2).toString();
 
-                    ClientManager cm = new ClientManager();
-                    Client client = cm.findOneClientByDni(m.getConnection(), dni);
+                    ClientManager cm = new ClientManager(m);
+                    Client client = cm.findOneClientByDni(dni);
 
-                    BillManager bm = new BillManager();
-                    ArrayList<Bill> billsArray = bm.findByClient(m.getConnection(), client, false);
+                    BillManager bm = new BillManager(m);
+                    ArrayList<Bill> billsArray = bm.findByClient(client, true);
 
-                    DefaultTableModel dtmodel = (DefaultTableModel) bt.getModel();
                     for (Bill b : billsArray) {
                         ArrayList<Input> inputs = b.getInputs();
                         ArrayList<Output> outputs = b.getOutputs();

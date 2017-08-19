@@ -4,11 +4,16 @@
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
             <file>file:/home/araluce/NetBeansProjects/ElMirador/src/Modelo/BillManager.java</file>
-            <file>file:/home/araluce/NetBeansProjects/ElMirador/src/Ini/Seed.java</file>
-            <file>file:/home/araluce/NetBeansProjects/ElMirador/src/Componentes/BillsTable.java</file>
+            <file>file:/home/araluce/NetBeansProjects/ElMirador/src/Modelo/Output.java</file>
+            <file>file:/home/araluce/NetBeansProjects/ElMirador/src/Modelo/Unsubscribe.java</file>
+            <file>file:/home/araluce/NetBeansProjects/ElMirador/src/Modelo/Bill.java</file>
+            <file>file:/home/araluce/NetBeansProjects/ElMirador/src/Modelo/OutputManager.java</file>
             <file>file:/home/araluce/NetBeansProjects/ElMirador/src/Modelo/InputManager.java</file>
             <file>file:/home/araluce/NetBeansProjects/ElMirador/src/Vista/Principal.java</file>
-            <file>file:/home/araluce/NetBeansProjects/ElMirador/src/Componentes/ClientsTable.java</file>
+            <file>file:/home/araluce/NetBeansProjects/ElMirador/src/Modelo/UnsubscribeManager.java</file>
+            <file>file:/home/araluce/NetBeansProjects/ElMirador/src/Modelo/Input.java</file>
+            <file>file:/home/araluce/NetBeansProjects/ElMirador/src/Modelo/Client.java</file>
+            <file>file:/home/araluce/NetBeansProjects/ElMirador/src/Modelo/ClientManager.java</file>
         </group>
     </open-files>
 </project-private>

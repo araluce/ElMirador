@@ -25,38 +25,33 @@ import src.Response;
  * @author araluce
  */
 public class OutputManager {
+    
+    private Model model;
+    private Connection conn;
+    private SimpleDateFormat sdf = new SimpleDateFormat("dd MMM yyyy HH:mm:ss", Locale.GERMANY);
 
     /**
-     * Constructor de ClienteManager
+     * ClienteManager constructor
+     * @param model
      */
-    public OutputManager() {
+    public OutputManager(Model model) {
+        this.model = model;
+        this.conn = model.getConnection();
     }
 
-    SimpleDateFormat sdf = new SimpleDateFormat("dd MMM yyyy HH:mm:ss", Locale.GERMANY);
-
-    /* Find a output by id
+    /* Find an output by id
      *
-     * @param conn
      * @param id
      * @return Output|null
      */
-    public Output find(Connection conn, int id) {
+    public Output find(int id) {
         ResultSet result = null;
         try {
             Statement st = conn.createStatement();
             result = st.executeQuery("SELECT * FROM Output WHERE id LIKE '" + id + "';");
             if (result.next()) {
-                Output output = new Output();
+                Output output = new Output(model);
                 output.setId(result.getInt("id"));
-                
-                BillManager bm = new BillManager();
-                Bill bill = bm.find(conn, result.getInt("bill_id"));
-                output.setBill(bill);
-                
-                ClientManager cm = new ClientManager();
-                Client client = cm.find(conn, result.getInt("client_id"));
-                output.setClient(client);
-                
                 output.setDestination(result.getString("destination"));
                 output.setTagged(result.getString("tagged"));
                 output.setNumHams(result.getInt("num_hams"));
@@ -90,17 +85,16 @@ public class OutputManager {
      * Find an output by bill
      *
      * @param bill A bill
-     * @param conn
      * @return Output|null
      */
-    public ArrayList<Output> findByBill(Connection conn, Bill bill) {
+    public ArrayList<Output> findByBill(Bill bill) {
         ArrayList<Output> outputs = null;
         ResultSet results = null;
         try {
             Statement st = conn.createStatement();
             results = st.executeQuery("SELECT * FROM Output WHERE bill_id LIKE '" + bill.getId() + "';");
             
-            outputs = this.resultSetToArray(conn, results);
+            outputs = this.resultSetToArray(results);
         } catch (SQLException ex) {
             Logger.getLogger(Model.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -112,17 +106,16 @@ public class OutputManager {
      * Find an output by client
      *
      * @param client A client
-     * @param conn
      * @return Output|null
      */
-    public ArrayList<Output> findByClient(Connection conn, Client client) {
+    public ArrayList<Output> findByClient(Client client) {
         ArrayList<Output> outputs = null;
         ResultSet results = null;
         try {
             Statement st = conn.createStatement();
             results = st.executeQuery("SELECT * FROM Output WHERE client_id LIKE '" + client.getId() + "';");
             
-            outputs = this.resultSetToArray(conn, results);
+            outputs = this.resultSetToArray(results);
         } catch (SQLException ex) {
             Logger.getLogger(Model.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -131,13 +124,13 @@ public class OutputManager {
     }
 
     /**
-     * Insert a new output into Output table
+     * Insert a new output into Output DB table
      *
      * @param conn
      * @param output
      * @return int
      */
-    public int flush(Connection conn, Output output) {
+    public int flush(Output output) {
         int result = 0;
         try {
             Statement st = conn.createStatement();
@@ -166,21 +159,12 @@ public class OutputManager {
         return result;
     }
 
-    private ArrayList<Output> resultSetToArray(Connection conn, ResultSet result) {
+    private ArrayList<Output> resultSetToArray(ResultSet result) {
         ArrayList<Output> outputs = new ArrayList<Output>();
         try {
             while (result.next()) {
-                Output output = new Output();
+                Output output = new Output(model);
                 output.setId(result.getInt("id"));
-                
-                BillManager bm = new BillManager();
-                Bill bill = bm.find(conn, result.getInt("bill_id"));
-                output.setBill(bill);
-                
-                ClientManager cm = new ClientManager();
-                Client client = cm.find(conn, result.getInt("client_id"));
-                output.setClient(client);
-                
                 output.setDestination(result.getString("destination"));
                 output.setTagged(result.getString("tagged"));
                 output.setNumHams(result.getInt("num_hams"));
@@ -208,7 +192,7 @@ public class OutputManager {
         return outputs;
     }
 
-    public Response remove(Output output, Connection conn) {
+    public Response remove(Output output) {
         Response resp = new Response();
         resp.setCode(0);
 

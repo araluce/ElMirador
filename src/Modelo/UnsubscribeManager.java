@@ -25,34 +25,33 @@ import src.Response;
  * @author araluce
  */
 public class UnsubscribeManager {
+    
+    private Model model;
+    private Connection conn;
+    private SimpleDateFormat sdf;
 
     /**
      * Constructor UnsubscribeManager
      */
-    public UnsubscribeManager() {
+    public UnsubscribeManager(Model model) {
+        this.model = model;
+        this.conn = model.getConnection();
+        this.sdf = new SimpleDateFormat("dd MMM yyyy HH:mm:ss", Locale.GERMANY);
     }
-
-    SimpleDateFormat sdf = new SimpleDateFormat("dd MMM yyyy HH:mm:ss", Locale.GERMANY);
 
     /* Find unsubscribe by id
      *
-     * @param conn
      * @param id
      * @return Unsubscribe|null
      */
-    public Unsubscribe find(Connection conn, int id) {
+    public Unsubscribe find(int id) {
         ResultSet result = null;
         try {
             Statement st = conn.createStatement();
             result = st.executeQuery("SELECT * FROM Unsubscribe WHERE id LIKE '" + id + "';");
             if (result.next()) {
-                Unsubscribe unsubscribe = new Unsubscribe();
-                unsubscribe.setId(result.getInt("id"));
-                
-                BillManager bm = new BillManager();
-                Bill bill = bm.find(conn, result.getInt("bill_id"));
-                unsubscribe.setBill(bill);
-                
+                Unsubscribe unsubscribe = new Unsubscribe(model);
+                unsubscribe.setId(result.getInt("id"));                
                 unsubscribe.setNumHamsUnsubscribes(result.getInt("num_hams_unsubscribes"));
                 unsubscribe.setNumPalettesUnsubscribes(result.getInt("num_palettes_unsubscribes"));
                 unsubscribe.setReason(result.getString("reason"));
@@ -84,17 +83,16 @@ public class UnsubscribeManager {
      * Find unsubscribe by bill
      *
      * @param bill A bill
-     * @param conn
      * @return Input|null
      */
-    public ArrayList<Unsubscribe> findByBill(Connection conn, Bill bill) {
+    public ArrayList<Unsubscribe> findByBill(Bill bill) {
         ArrayList<Unsubscribe> unsubscribes = null;
         ResultSet results = null;
         try {
             Statement st = conn.createStatement();
             results = st.executeQuery("SELECT * FROM Unsubscribe WHERE bill_id LIKE '" + bill.getId() + "';");
             
-            unsubscribes = this.resultSetToArray(conn, results);
+            unsubscribes = this.resultSetToArray(results);
         } catch (SQLException ex) {
             Logger.getLogger(Model.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -103,13 +101,12 @@ public class UnsubscribeManager {
     }
 
     /**
-     * Insert a new unsubscribe into Unsubscribe table
+     * Insert a new unsubscribe into Unsubscribe DB table
      *
-     * @param conn
      * @param unsubscribe
      * @return int
      */
-    public int flush(Connection conn, Unsubscribe unsubscribe) {
+    public int flush(Unsubscribe unsubscribe) {
         int result = 0;
         try {
             Statement st = conn.createStatement();
@@ -135,17 +132,12 @@ public class UnsubscribeManager {
         return result;
     }
 
-    private ArrayList<Unsubscribe> resultSetToArray(Connection conn, ResultSet result) {
+    private ArrayList<Unsubscribe> resultSetToArray(ResultSet result) {
         ArrayList<Unsubscribe> unsubscribes = new ArrayList<Unsubscribe>();
         try {
             while (result.next()) {
-                Unsubscribe unsubscribe = new Unsubscribe();
+                Unsubscribe unsubscribe = new Unsubscribe(model);
                 unsubscribe.setId(result.getInt("id"));
-                
-                BillManager bm = new BillManager();
-                Bill bill = bm.find(conn, result.getInt("bill_id"));
-                unsubscribe.setBill(bill);
-                
                 unsubscribe.setNumHamsUnsubscribes(result.getInt("num_hams_unsubscribes"));
                 unsubscribe.setNumPalettesUnsubscribes(result.getInt("num_palettes_unsubscribes"));
                 unsubscribe.setReason(result.getString("reason"));
@@ -171,7 +163,7 @@ public class UnsubscribeManager {
         return unsubscribes;
     }
 
-    public Response remove(Unsubscribe unsubcribe, Connection conn) {
+    public Response remove(Unsubscribe unsubcribe) {
         Response resp = new Response();
         resp.setCode(0);
 

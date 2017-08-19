@@ -88,9 +88,9 @@ public class Principal extends javax.swing.JFrame {
         this.billsTable.setVisible(false);
         panelResultadosAlbaranes.getViewport().add(this.billsTable);
         panelBusquedaClientes.add(this.inputSearchClientes);
-        
-        BillManager bm = new BillManager();
-        ArrayList<Bill> billsArray = bm.findAll(model.getConnection(), true);
+
+        BillManager bm = new BillManager(model);
+        ArrayList<Bill> billsArray = bm.findAll(true);
         System.out.println("Total bills: " + billsArray.size());
 
     }
@@ -112,9 +112,9 @@ public class Principal extends javax.swing.JFrame {
         this.initializeClientTable();
         this.initializeBillsTable();
 
-        updateClientSelector(false, null);
+        this.updateClientSelector(false, null);
 
-        setClientSelectActionListener();
+        this.setClientSelectActionListener();
     }
 
     private void initializeInputSearchClientes() {
@@ -128,9 +128,9 @@ public class Principal extends javax.swing.JFrame {
     }
 
     private void initializeClientTable() {
-        ClientManager cm = new ClientManager();
+        ClientManager cm = new ClientManager(model);
         ArrayList<Client> clientsArray = new ArrayList<Client>();
-        clientsArray = cm.findAllClients(model.getConnection(), false);
+        clientsArray = cm.findAllClients(false);
         DefaultTableModel dtmodel = (DefaultTableModel) this.clientsTable.getModel();
 
         for (Client c : clientsArray) {
@@ -139,9 +139,11 @@ public class Principal extends javax.swing.JFrame {
     }
 
     private void initializeBillsTable() {
-        BillManager bm = new BillManager();
-        ArrayList<Bill> billsArray = bm.findAll(model.getConnection(), false);
-
+        BillManager bm = new BillManager(model);
+        ArrayList<Bill> billsArray = bm.findAll(true);
+        
+        System.out.println(billsArray.size() + " bills was founded");
+        
         DefaultTableModel dtmodel = (DefaultTableModel) billsTable.getModel();
         for (Bill b : billsArray) {
             ArrayList<Input> inputs = b.getInputs();
@@ -149,6 +151,13 @@ public class Principal extends javax.swing.JFrame {
             ArrayList<Unsubscribe> unsubscribes = b.getUnsubscribes();
 
             dtmodel.addRow(new Object[]{b.getId(), inputs.size(), outputs.size(), unsubscribes.size()});
+            System.out.println(
+                    "Added to bill table\n"
+                    + "\tid: " + b.getId()
+                    + "\tnum_inputs: " + inputs.size()
+                    + "\tnum_outputs: " + outputs.size()
+                    + "\tnum_unsubscribes: " + unsubscribes.size()
+            );
         }
 
         billsTable.setVisible(true);
@@ -217,8 +226,8 @@ public class Principal extends javax.swing.JFrame {
         if (setClient) {
 
         } else {
-            ClientManager cm = new ClientManager();
-            ArrayList<Client> clients = cm.findAllClients(this.model.getConnection(), false);
+            ClientManager cm = new ClientManager(model);
+            ArrayList<Client> clients = cm.findAllClients(false);
             Vector client_model = new Vector();
             for (Client c : clients) {
                 client_model.addElement(c);
@@ -318,12 +327,12 @@ public class Principal extends javax.swing.JFrame {
         registerButtonTab1.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                ClientManager cm = new ClientManager();
+                ClientManager cm = new ClientManager(model);
                 ArrayList<Client> clientList = new ArrayList<Client>();
-                clientList = cm.findClientsByDni(model.getConnection(), inputDni.getText());
+                clientList = cm.findClientsByDni(inputDni.getText());
                 if (clientList.isEmpty()) {
                     // Creamos al nuevo cliente
-                    Client cliente = new Client();
+                    Client cliente = new Client(model);
                     cliente.setName(inputName.getText().toUpperCase());
                     cliente.setLastname1(inputLastname1.getText().toUpperCase());
                     cliente.setLastname2(inputLastname2.getText().toUpperCase());
@@ -337,13 +346,13 @@ public class Principal extends javax.swing.JFrame {
                     inputDni.setText("");
                     inputPhone.setText("");
 
-                    int resultado = cm.flush(model.getConnection(), cliente);
+                    int resultado = cm.flush(cliente);
                     if (resultado == 0) {
                         JOptionPane.showMessageDialog(null, "Se ha producido un error y no se ha dado de alta al cliente", "ERROR", JOptionPane.ERROR_MESSAGE);
                     } else {
                         JOptionPane.showMessageDialog(null, "Cliente dado de alta correctamente");
                         ArrayList<Client> arrayClientes = new ArrayList<Client>();
-                        arrayClientes = cm.findAllClients(model.getConnection(), true);
+                        arrayClientes = cm.findAllClients(true);
                         DefaultTableModel model = (DefaultTableModel) clientsTable.getModel();
                         model.setRowCount(0);
                         for (Client c : arrayClientes) {
@@ -440,19 +449,17 @@ public class Principal extends javax.swing.JFrame {
             public void actionPerformed(ActionEvent e) {
                 boolean isValid = true;
 
-                BillManager bm = new BillManager();
-                Bill bill = new Bill();
-                bill.setId(bm.getLastId(model.getConnection()));
+                BillManager bm = new BillManager(model);
+                Bill bill = new Bill(model);
+                bill.setId(bm.getLastId());
 
-                
                 if (client_selected_new_bill != null) {
                     bill.setClient(client_selected_new_bill);
                 } else {
                     isValid = false;
                 }
-                
 
-                Input input = new Input();
+                Input input = new Input(model);
                 input.setBill(bill);
 
                 if ("".equals(inputLotNumber.getText().trim())) {
@@ -460,35 +467,30 @@ public class Principal extends javax.swing.JFrame {
                 } else {
                     input.setLotNumber(Integer.parseInt(inputLotNumber.getText()));
                 }
-                
 
                 if ("".equals(inputNumHams.getText().trim())) {
                     isValid = false;
                 } else {
                     input.setNumHams(Integer.parseInt(inputNumHams.getText()));
                 }
-                
 
                 if ("".equals(inputNumPalettes.getText())) {
                     isValid = false;
                 } else {
                     input.setNumPalettes(Integer.parseInt(inputNumPalettes.getText()));
                 }
-                
 
                 if ("".equals(inputPrice.getText().trim())) {
                     isValid = false;
                 } else {
                     input.setPrice(Float.parseFloat(inputPrice.getText()));
                 }
-                
 
                 if ("".equals(inputTReception.getText().trim())) {
                     isValid = false;
                 } else {
                     input.setTReception(inputTReception.getText());
                 }
-                
 
                 if ("".equals(inputWeight.getText().trim())) {
                     isValid = false;
@@ -498,7 +500,7 @@ public class Principal extends javax.swing.JFrame {
 
                 bill.addInput(input);
                 if (isValid) {
-                    int resultado = bm.flush(model.getConnection(), bill);
+                    int resultado = bm.flush(bill);
                     if (resultado == 0) {
                         JOptionPane.showMessageDialog(null, "Se ha producido un error y no se ha dado de insertado el albarán", "ERROR", JOptionPane.ERROR_MESSAGE);
                     } else {

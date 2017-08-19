@@ -25,34 +25,37 @@ import src.Response;
  * @author araluce
  */
 public class InputManager {
+    
+    private Model model;
+    private Connection conn;
+    private SimpleDateFormat sdf;
 
     /**
-     * Constructor InputeManager
+     * InputeManager constructor
+     * @param model
      */
-    public InputManager() {
+    public InputManager(Model model) {
+        this.model = model;
+        this.conn = model.getConnection();
+        this.sdf = new SimpleDateFormat("dd MMM yyyy HH:mm:ss", Locale.GERMANY);
     }
 
-    SimpleDateFormat sdf = new SimpleDateFormat("dd MMM yyyy HH:mm:ss", Locale.GERMANY);
+    
 
-    /* Encuentra una entrada por id
+    /*
+     * Find an input by id
      *
-     * @param conn
      * @param id
      * @return Input|null
      */
-    public Input find(Connection conn, int id) {
+    public Input find(int id) {
         ResultSet result = null;
         try {
             Statement st = conn.createStatement();
             result = st.executeQuery("SELECT * FROM Input WHERE id LIKE '" + id + "';");
             if (result.next()) {
-                Input input = new Input();
+                Input input = new Input(model);
                 input.setId(result.getInt("id"));
-                
-                BillManager bm = new BillManager();
-                Bill bill = bm.find(conn, result.getInt("bill_id"));
-                input.setBill(bill);
-                
                 input.setLotNumber(result.getInt("lot_number"));
                 input.setWeight(result.getFloat("weight"));
                 input.setPrice(result.getFloat("price"));
@@ -83,20 +86,19 @@ public class InputManager {
     
 
     /**
-     * Encuentra una entrada por albarán
+     * Find an input by bill
      *
      * @param bill A bill
-     * @param conn
      * @return Input|null
      */
-    public ArrayList<Input> findByBill(Connection conn, Bill bill) {
+    public ArrayList<Input> findByBill(Bill bill) {
         ArrayList<Input> inputs = null;
         ResultSet results = null;
         try {
             Statement st = conn.createStatement();
             results = st.executeQuery("SELECT * FROM Input WHERE bill_id LIKE '" + bill.getId() + "';");
             
-            inputs = this.resultSetToArray(conn, results);
+            inputs = this.resultSetToArray(results);
         } catch (SQLException ex) {
             Logger.getLogger(Model.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -105,13 +107,12 @@ public class InputManager {
     }
 
     /**
-     * Inserta un nuevo input en la tabla Input
+     * Insert a new input into Input DB table
      *
-     * @param conn
      * @param input
      * @return int
      */
-    public int flush(Connection conn, Input input) {
+    public int flush(Input input) {
         int result = 0;
         try {
             Statement st = conn.createStatement();
@@ -140,17 +141,17 @@ public class InputManager {
         return result;
     }
 
-    private ArrayList<Input> resultSetToArray(Connection conn, ResultSet result) {
+    /**
+     * Make an Input array with a given resulset
+     * @param result
+     * @return 
+     */
+    private ArrayList<Input> resultSetToArray(ResultSet result) {
         ArrayList<Input> inputs = new ArrayList<Input>();
         try {
             while (result.next()) {
-                Input input = new Input();
+                Input input = new Input(model);
                 input.setId(result.getInt("id"));
-                
-                BillManager bm = new BillManager();
-                Bill bill = bm.find(conn, result.getInt("bill_id"));
-                input.setBill(bill);
-                
                 input.setLotNumber(result.getInt("lot_number"));
                 input.setWeight(result.getFloat("weight"));
                 input.setPrice(result.getFloat("price"));
@@ -178,7 +179,12 @@ public class InputManager {
         return inputs;
     }
 
-    public Response remove(Input input, Connection conn) {
+    /**
+     * Check an input as remove
+     * @param input
+     * @return 
+     */
+    public Response remove(Input input) {
         Response resp = new Response();
         resp.setCode(0);
 

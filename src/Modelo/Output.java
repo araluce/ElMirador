@@ -16,6 +16,10 @@ import java.util.Calendar;
  */
 public class Output {
     
+    private Model model;
+    private BillManager bm;
+    private ClientManager cm;
+    
     private int id;
     private Bill bill;
     private Client client;
@@ -29,7 +33,11 @@ public class Output {
     private Calendar created_at;
     private Calendar updated_at;
     
-    public Output(){
+    public Output(Model model){
+        this.model = model;
+        this.bm = new BillManager(model);
+        this.cm = new ClientManager(model);
+        
         this.bill = null;
         this.client = null;
         this.date_output = Calendar.getInstance();
@@ -45,10 +53,14 @@ public class Output {
     }
     
     public Bill getBill(){
+        if(this.bill == null)
+            this.bill = bm.findOneByOutput(this);
         return this.bill;
     }
     
     public Client getClient(){
+        if(this.client == null)
+            this.client = cm.findOneByOutput(this);
         return this.client;
     }
     

@@ -17,6 +17,9 @@ import java.util.Calendar;
  */
 public class Input {
     
+    private Model model;
+    private BillManager bm;
+    
     private int id;
     private Bill bill;
     private Calendar date_input;
@@ -30,7 +33,10 @@ public class Input {
     private Calendar created_at;
     private Calendar updated_at;
     
-    public Input(){
+    public Input(Model model){
+        this.model = model;
+        this.bm = new BillManager(model);
+        
         this.bill = null;
         this.date_input = Calendar.getInstance();
         this.lot_number = 0;
@@ -48,6 +54,8 @@ public class Input {
     }
     
     public Bill getBill(){
+        if(this.bill == null)
+            this.bill = bm.findOneByInput(this);
         return this.bill;
     }
     
